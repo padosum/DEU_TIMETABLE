@@ -42,7 +42,7 @@ public class DeuTimeTable extends JComponent {
 		
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				displayGUI("동의대 수강신청 프로그램", c);
+				displayGUI("DeuTimeTable", c);
 				
 			}
 		});
