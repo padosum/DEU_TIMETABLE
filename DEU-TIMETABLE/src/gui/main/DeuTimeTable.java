@@ -1,52 +1,59 @@
 package gui.main;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
-
-import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 
-//¸ŞÀÎ GUI
+import gui.main.AddMenu;
+import gui.main.main_layout;
 
-public class DeuTimeTable extends JComponent {
+public class DeuTimeTable extends JPanel implements AddMenu{
 	
-	/*	
-		@param title Ã¢ÀÇ Á¦¸ñ, Àå°ú ·¹½ÃÇÇ Ç¥½Ã
-		@param canvas ±×¸®±â ¿µ¿ª
+	@Override
+	public void menu(final JFrame frame) {
+		// ë©”ë‰´ë°” ê°ì²´ ìƒì„±
+		JMenuBar menuBar = new JMenuBar();
 		
-	*/
-	
-	protected static void displayGUI(final String title, final JComponent
-			component) {
+		// ë©”ë‰´ ì¶”ê°€
+		JMenu menu = new JMenu("íŒŒì¼(F)");
+		JMenu help = new JMenu("ë„ì›€ë§(H)");
 		
-		// Á¦¸ñÀÌ ÀÖ´Â Ã¢ »ı¼º
-		final JFrame frame = new JFrame(title);
+		// ì„œë¸Œ ë©”ë‰´ ìƒì„±
+		JMenuItem show = new JMenuItem("ì‹œê°„í‘œ ë³´ê¸°");
+		JMenuItem save = new JMenuItem("ì‹œê°„í‘œ ì €ì¥");
+		JMenuItem load = new JMenuItem("ì‹œê°„í‘œ ë¶ˆëŸ¬ì˜¤ê¸°");
+		JMenuItem load_lecture = new JMenuItem("ê°•ì˜í¸ëŒ ë¶ˆëŸ¬ì˜¤ê¸°");
 		
-		// Á¾·á ¹öÆ° ¼³Á¤
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		JMenuItem about = new JMenuItem("ì´ í”„ë¡œê·¸ë¨ì— ëŒ€í•´ì„œ...");
 		
-		// BorderLayoutÀ» ÀÌ¿ë, component¸¦ Áß¾Ó¿¡ ¹èÄ¡
-		frame.getContentPane().add(component, BorderLayout.CENTER);
+		// ì„œë¸Œ ë©”ë‰´ ì¶”ê°€
+		menu.add(show);
+		menu.add(save);
+		menu.add(load);
+		menu.addSeparator();	// ë¶„ë¦¬ì„  ì¶”ê°€
+		menu.add(load_lecture);
+		help.add(about);
 		
-		// ·¹ÀÌ¾Æ¿ô¿¡ ±â¹İÇÑ Ã¢ Å©±â
-		frame.pack();
+		// ë©”ë‰´ë°”ì— ë©”ë‰´ ì¶”ê°€
+		menuBar.add(menu);
+		menuBar.add(help);
 		
-		// È­¸é¿¡ Ç¥½Ã
-		frame.setVisible(true);
-	}
-	
+		// í”„ë ˆì„ì— ë©”ë‰´ë°” ì¶”ê°€
+		frame.setJMenuBar(menuBar);
+		
+	} 
+
+
 	public static void main(String[] args) {
-		final DeuTimeTable c = new DeuTimeTable();
-		c.setPreferredSize(new Dimension(290, 277));
+		final JPanel c = new DeuTimeTable();
+		c.setPreferredSize(new Dimension(433, 312));
 		
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				displayGUI("DeuTimeTable", c);
-				
-			}
-		});
+		// EDTë¥¼ ì‚¬ìš©í•´ ì‹¤í–‰í•  GUI ì‘ì—…ì„ ë„£ëŠ”ë‹¤.
+		// titleê³¼ component
+		main_layout.launch("ë™ì˜ëŒ€ ì‹œê°„í‘œ í”„ë¡œê·¸ë¨", c);
+	} 
 
-	}
-
-}
+} 
