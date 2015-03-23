@@ -12,31 +12,33 @@ public class main_layout {
 	protected static void displayGUI(final String title, final JComponent
 			component) {
 		
-		// Ã¢ÀÇ Á¦¸ñ°ú ÇÔ²² Ã¢ »ı¼º
+		// ì°½ì˜ ì œëª©ê³¼ í•¨ê»˜ ì°½ ìƒì„±
         final JFrame frame = new JFrame(title);
         if (component instanceof AddMenu) {
             AddMenu ms = (AddMenu) component;
-            ms.menu(frame);
+            ms.top(frame);
+            ms.middle(frame);
+           
         }
         
-        // ¾ÖÇÃ¸®ÄÉÀÌ¼Ç Á¾·á ¹öÆ° ¼³Á¤
+        // ì• í”Œë¦¬ì¼€ì´ì…˜ ì¢…ë£Œ ë²„íŠ¼ ì„¤ì •
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        // BorderLayoutÀ» »ç¿ëÇØ¼­ ÄÄÆ÷³ÍÆ®¸¦ Áß¾ÓÀ¸·Î ¹èÄ¡
+        // BorderLayoutì„ ì‚¬ìš©í•´ì„œ ì»´í¬ë„ŒíŠ¸ë¥¼ ì¤‘ì•™ìœ¼ë¡œ ë°°ì¹˜
         frame.getContentPane().add(component, BorderLayout.CENTER);
         frame.setMinimumSize(component.getMinimumSize());
         
-        // ·¹ÀÌ¾Æ¿ô¿¡ ±â¹İÇÑ Ã¢ Å©±â(ÀûÀıÇÑ Å©±â)
+        // ë ˆì´ì•„ì›ƒì— ê¸°ë°˜í•œ ì°½ í¬ê¸°(ì ì ˆí•œ í¬ê¸°)
         frame.pack();
 
-        // ¸ğ´ÏÅÍ Áß¾Ó °ª
+        // ëª¨ë‹ˆí„° ì¤‘ì•™ ê°’
         Dimension scrnSize = Toolkit.getDefaultToolkit().getScreenSize();
         int scrnWidth = frame.getSize().width;
         int scrnHeight = frame.getSize().height;
         int x = (scrnSize.width - scrnWidth) / 2;
         int y = (scrnSize.height - scrnHeight) / 2;
     
-        // Ã¢ ÀÌµ¿
+        // ì°½ ì´ë™
         frame.setLocation(x, y);
         
         // display 
@@ -45,8 +47,8 @@ public class main_layout {
 
 	public static void launch(final String title, final JComponent component) {
 		
-		// ÀÌº¥Æ® µğ½ºÆĞÄª ½º·¹µå(EDT)¸¦ »ç¿ëÇØ
-		// ½ÇÇàÇÒ GUUI ÀÛ¾÷À» ´ë±â¿­¿¡ ³Ö´Â´Ù.
+		// ì´ë²¤íŠ¸ ë””ìŠ¤íŒ¨ì¹­ ìŠ¤ë ˆë“œ(EDT)ë¥¼ ì‚¬ìš©í•´
+		// ì‹¤í–‰í•  GUUI ì‘ì—…ì„ ëŒ€ê¸°ì—´ì— ë„£ëŠ”ë‹¤.
 		SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 displayGUI(title, component);
