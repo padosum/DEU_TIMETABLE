@@ -29,6 +29,8 @@ public class DeuTimeTable extends JPanel implements AddMenu{
 		
 		JMenuItem about = new JMenuItem("이 프로그램에 대해서...");
 		
+		// test 
+		
 		// 서브 메뉴 추가
 		menu.add(show);
 		menu.add(save);
