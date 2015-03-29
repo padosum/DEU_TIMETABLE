@@ -55,11 +55,14 @@ public class DeuTimeTable extends JPanel implements AddMenu{
 		//jcombobox 객체 추가
 		JComboBox jc = new JComboBox();
 		add(jc);
-		jc.addItem("수강대상대학(원)");
-		jc.addItem("수강대상학과");
+		jc.addItem("구분");
+		jc.addItem("강좌번호");
+		jc.addItem("교과목명");
 		jc.addItem("학점");
-		jc.addItem("교과구분");
-		jc.addItem("학년");
+		jc.addItem("시간");
+		jc.addItem("수강대상(학년)");
+		jc.addItem("담당교수");
+		jc.addItem("강의실");
 		
 		//jtextfield 객체 추가
 		JTextField jt = new JTextField(10);
@@ -74,13 +77,12 @@ public class DeuTimeTable extends JPanel implements AddMenu{
 	public void middle(final JFrame frame) {
 		// 테이블의 각 셀에 들어갈 내용을 이차원 배열에 넣는다.
 		Object [][]data = {
-				{"최연정", "111-2222", "assdf@naver.com", "1", "2"},
-				{"최연정", "111-2222", "assdf@naver.com", "1", "2"},
-				{"최연정", "111-2222", "assdf@naver.com", "1", "2"},
+				{"전공핵심", "123456-00", "데이터베이스", "3", "/3", "3", "최치즈", "자대319"},
+				{"교양", "123456-01", "누가내치즈를..", "3", "/2", "3", "헴과허", "자대419"}
 		};
 		
 		// 테이블의 열 이름이 들어갈 내용을 일차원 배열에 넣는다.
-		String[] colName = {"수강대상대학(원)", "수강대상학과", "학점", "교과구분", "학년"};
+		String[] colName = {"구분", "강좌번호", "교과목명", "학점", "시간", "수강대상(학년)", "담당교수", "강의시간 및 강의실"};
 		
 		// JTable생성자를 이용하여 테이블을 만든다.
 		JTable table = new JTable(data, colName);
@@ -93,12 +95,14 @@ public class DeuTimeTable extends JPanel implements AddMenu{
 		
 		JButton remove = new JButton("제거");
 		add(remove);
+		
+		
 	}
 	
 
 	public static void main(String[] args) {
 		final JPanel c = new DeuTimeTable();
-		c.setPreferredSize(new Dimension(433, 312));
+		c.setPreferredSize(new Dimension(500, 600)); // 윈도우 창 크기
 		
 		// EDT를 사용해 실행할 GUI 작업을 넣는다.
 		// title과 component
