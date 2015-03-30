@@ -1,6 +1,8 @@
 package gui.main;
 
 import java.awt.Dimension;
+import java.awt.Font;
+import java.util.Enumeration;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -12,6 +14,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
+import javax.swing.plaf.FontUIResource;
 import javax.swing.table.DefaultTableModel;
 
 import gui.main.AddMenu;
@@ -99,10 +103,27 @@ public class DeuTimeTable extends JPanel implements AddMenu{
 		
 	}
 	
+	// 폰트 설정 method
+	public static void setUIFont(FontUIResource f) {
+        Enumeration keys = UIManager.getDefaults().keys();
+        while (keys.hasMoreElements()) {
+            Object key = keys.nextElement();
+            Object value = UIManager.get(key);
+            if (value instanceof FontUIResource) {
+                FontUIResource orig = (FontUIResource) value;
+                Font font = new Font(f.getFontName(), orig.getStyle(), f.getSize());
+                UIManager.put(key, new FontUIResource(font));
+            }
+        }
+    }
+	
 
 	public static void main(String[] args) {
 		final JPanel c = new DeuTimeTable();
 		c.setPreferredSize(new Dimension(500, 600)); // 윈도우 창 크기
+		
+		// 폰트 설정
+		 setUIFont(new FontUIResource(new Font("나눔고딕", 0, 13)));
 		
 		// EDT를 사용해 실행할 GUI 작업을 넣는다.
 		// title과 component
