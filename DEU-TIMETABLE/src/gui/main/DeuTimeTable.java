@@ -103,6 +103,26 @@ public class DeuTimeTable extends JPanel implements AddMenu{
 		
 	}
 	
+	public void bottom(final JFrame frame) {
+		
+		Object [][]data = {
+				
+		};
+		
+		// 테이블의 열 이름이 들어갈 내용을 일차원 배열에 넣는다.
+		String[] colName = {"구분", "강좌번호", "교과목명", "학점", "시간", "수강대상(학년)", "담당교수", "강의시간 및 강의실"};
+		
+		// JTable생성자를 이용하여 테이블을 만든다.
+		JTable table_add = new JTable(data, colName);
+		
+		// JScrollPane에 테이블을 붙이고, 프레임에 붙인다.
+		JScrollPane scroll = new JScrollPane(table_add);
+		scroll.setPreferredSize(new Dimension(450, 100)); // scroll 크기
+		// table.setPreferredSize(new Dimension(450, 500));
+		add(scroll);
+	
+	}
+	
 	// 폰트 설정 method
 	public static void setUIFont(FontUIResource f) {
         Enumeration keys = UIManager.getDefaults().keys();
@@ -121,6 +141,7 @@ public class DeuTimeTable extends JPanel implements AddMenu{
 	public static void main(String[] args) {
 		final JPanel c = new DeuTimeTable();
 		c.setPreferredSize(new Dimension(500, 600)); // 윈도우 창 크기
+		
 		
 		// 폰트 설정
 		 setUIFont(new FontUIResource(new Font("나눔고딕", 0, 13)));

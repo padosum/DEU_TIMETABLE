@@ -18,8 +18,9 @@ public class main_layout {
             AddMenu ms = (AddMenu) component;
             ms.top(frame);
             ms.middle(frame);
-           
+            ms.bottom(frame);
         }
+        
         
         // 애플리케이션 종료 버튼 설정
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
