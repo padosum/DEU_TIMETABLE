@@ -1,5 +1,6 @@
 package gui.main;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.util.Enumeration;
@@ -12,6 +13,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
@@ -75,6 +77,9 @@ public class DeuTimeTable extends JPanel implements AddMenu{
 		//jbutton 객체 추가
 		JButton search = new JButton("검색");
 		add(search);
+		
+		JTabbedPane tabPane = new JTabbedPane(JTabbedPane.LEFT);
+		
 	} 
 	
 	
@@ -92,7 +97,9 @@ public class DeuTimeTable extends JPanel implements AddMenu{
 		JTable table = new JTable(data, colName);
 		
 		// JScrollPane에 테이블을 붙이고, 프레임에 붙인다.
-		add(new JScrollPane(table));
+		JScrollPane scroll = new JScrollPane(table);
+		add(scroll);
+		scroll.getViewport().setBackground(Color.WHITE);	// 배경흰색
 		
 		JButton add = new JButton("추가");
 		add(add);
@@ -116,10 +123,12 @@ public class DeuTimeTable extends JPanel implements AddMenu{
 		JTable table_add = new JTable(data, colName);
 		
 		// JScrollPane에 테이블을 붙이고, 프레임에 붙인다.
-		JScrollPane scroll = new JScrollPane(table_add);
-		scroll.setPreferredSize(new Dimension(450, 100)); // scroll 크기
+		JScrollPane scroll_bottom = new JScrollPane(table_add);
+		scroll_bottom.getViewport().setBackground(Color.WHITE);	// 배경흰색
+		
+		scroll_bottom.setPreferredSize(new Dimension(450, 100)); // scroll 크기
 		// table.setPreferredSize(new Dimension(450, 500));
-		add(scroll);
+		add(scroll_bottom);
 	
 	}
 	

@@ -2,7 +2,9 @@ package gui.main;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.Toolkit;
+
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -26,7 +28,7 @@ public class main_layout {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         // BorderLayout을 사용해서 컴포넌트를 중앙으로 배치
-        frame.getContentPane().add(component, BorderLayout.CENTER);
+        frame.getContentPane().add(component, BorderLayout.WEST);
         frame.setMinimumSize(component.getMinimumSize());
         
         // 레이아웃에 기반한 창 크기(적절한 크기)
