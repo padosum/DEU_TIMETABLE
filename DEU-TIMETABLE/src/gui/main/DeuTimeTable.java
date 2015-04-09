@@ -1,7 +1,10 @@
 package gui.main;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,17 +13,21 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Enumeration;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;    
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.plaf.FontUIResource;
@@ -38,51 +45,32 @@ import gui.main.main_layout;
 public class DeuTimeTable extends JPanel implements AddMenu{
 
    public static void main(String[] args) {
-      final JPanel c = new DeuTimeTable();
+	   
+	   final JPanel c = new DeuTimeTable();
+	   final JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.LEFT);
+
+
+	   JLabel label = new JLabel("Tab1", UIManager.getIcon("OptionPane.informationIcon"), JLabel.RIGHT);        
+	  
+	   c.add(label, BorderLayout.WEST);
+
+	   tabbedPane.addTab(null, new JPanel());
+	   tabbedPane.setTabComponentAt(0, c); // Here set the custom tab component
+
       c.setPreferredSize(new Dimension(500, 600)); // 윈도우 창 크기
-      
+     
       // 폰트 설정
        setUIFont(new FontUIResource(new Font("나눔고딕", 0, 13)));
       
       // EDT를 사용해 실행할 GUI 작업을 넣는다.
       // title과 component
-      main_layout.launch("동의대 시간표 프로그램", c);
+      main_layout.launch("동의대 시간표 프로그램",c);
       
    } 
    
    
    public void top(final JFrame frame) {
-      // 메뉴바 객체 생성
-      JMenuBar menuBar = new JMenuBar();
-      
-      // 메뉴 추가
-      JMenu menu = new JMenu("파일(F)");
-      JMenu help = new JMenu("도움말(H)");
-      
-      
-      // 서브 메뉴 생성
-      JMenuItem show = new JMenuItem("시간표 보기");
-      JMenuItem save = new JMenuItem("시간표 저장");
-      JMenuItem load = new JMenuItem("시간표 불러오기");
-      JMenuItem load_lecture = new JMenuItem("강의편람 불러오기");
-      
-      JMenuItem about = new JMenuItem("이 프로그램에 대해서...");
-
-      // 서브 메뉴 추가
-      menu.add(show);
-      menu.add(save);
-      menu.add(load);
-      menu.addSeparator();   // 분리선 추가
-      menu.add(load_lecture);
-      help.add(about);
-      
-      // 메뉴바에 메뉴 추가
-      menuBar.add(menu);
-      menuBar.add(help);
-      
-      // 프레임에 메뉴바 추가
-      frame.setJMenuBar(menuBar);
-      
+  
       //jcombobox 객체 추가
       JComboBox jc = new JComboBox();
       add(jc);
@@ -209,7 +197,7 @@ public class DeuTimeTable extends JPanel implements AddMenu{
       }
       
    
-   public void bottom(final JFrame frame) {
+   public void bottom(final JFrame fram) {
       
       Object [][]data = {   
       };
