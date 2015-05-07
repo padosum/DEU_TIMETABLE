@@ -2,6 +2,7 @@ package gui.main;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 
@@ -19,10 +20,10 @@ public class main_layout {
         if (component instanceof AddMenu) {
             AddMenu ms = (AddMenu) component;
             ms.top(frame);
-            ms.timeTable(frame);
             ms.middle(frame);
             ms.middle2(frame);
             ms.bottom(frame);
+            ms.timeTable(frame);
         }
         
         
@@ -30,7 +31,7 @@ public class main_layout {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         // BorderLayout을 사용해서 컴포넌트를 중앙으로 배치
-        frame.getContentPane().add(component, BorderLayout.WEST);
+        frame.getContentPane().add(component, BorderLayout.CENTER);
         frame.setMinimumSize(component.getMinimumSize());
         
         // 레이아웃에 기반한 창 크기(적절한 크기)

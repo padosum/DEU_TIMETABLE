@@ -42,6 +42,7 @@ import org.omg.CORBA.DATA_CONVERSION;
 
 import gui.main.AddMenu;
 import gui.main.main_layout;
+import data.DefineString;
 
 public class DeuTimeTable extends JPanel implements AddMenu, ActionListener{
 	/**
@@ -64,15 +65,15 @@ public class DeuTimeTable extends JPanel implements AddMenu, ActionListener{
 		JMenuBar menuBar = new JMenuBar();
 		
 		// 메뉴 추가
-		JMenu menu = new JMenu("파일(F)");
-		JMenu help = new JMenu("도움말(H)");
+		JMenu menu = new JMenu(DefineString.Menu.FILE);
+		JMenu help = new JMenu(DefineString.Menu.HELP);
 		
 		
 		// 서브 메뉴 생성
-		JMenuItem show = new JMenuItem("시간표 보기");
-		JMenuItem save = new JMenuItem("시간표 저장");
-		JMenuItem load = new JMenuItem("시간표 불러오기");
-		JMenuItem load_lecture = new JMenuItem("강의편람 불러오기");
+		JMenuItem show = new JMenuItem(DefineString.Menu.SHOW_TIME_TABLE);
+		JMenuItem save = new JMenuItem(DefineString.Menu.SAVE_TIME_TABLE);
+		JMenuItem load = new JMenuItem(DefineString.Menu.LOAD_TIME_TABLE);
+		JMenuItem load_lecture = new JMenuItem(DefineString.Menu.LOAD_HAND_BOOK);
 		
 		JMenuItem about = new JMenuItem("이 프로그램에 대해서...");
 
@@ -108,7 +109,7 @@ public class DeuTimeTable extends JPanel implements AddMenu, ActionListener{
 		add(jt);
 		
 		//jbutton 객체 추가
-		JButton search = new JButton("검색");
+		JButton search = new JButton(DefineString.SEARCH);
 		add(search);
 	} 
 
@@ -226,10 +227,10 @@ public class DeuTimeTable extends JPanel implements AddMenu, ActionListener{
 	public void middle2(JFrame frame) // 버튼 이벤트
 	{
 		
-		JButton add = new JButton("추가");
+		JButton add = new JButton(DefineString.ADD);
 		add(add);
 		
-		JButton remove = new JButton("제거");
+		JButton remove = new JButton(DefineString.REMOVE);
 		add(remove);
 		
 		add.addActionListener(this);
@@ -361,7 +362,7 @@ public void timeTable(final JFrame frame) {
 		 setUIFont(new FontUIResource(new Font("나눔고딕", 0, 13)));
 		// EDT를 사용해 실행할 GUI 작업을 넣는다.
 		// title과 component
-		main_layout.launch("동의대 시간표 프로그램", c);
+		main_layout.launch(DefineString.TITLE, c);
 		
 		return;
 		
