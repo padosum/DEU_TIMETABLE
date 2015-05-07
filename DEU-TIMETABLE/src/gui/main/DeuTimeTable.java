@@ -93,16 +93,15 @@ public class DeuTimeTable extends JPanel implements AddMenu, ActionListener{
 		frame.setJMenuBar(menuBar);
 		
 		//jcombobox 객체 추가
-		JComboBox jc = new JComboBox();
+		JComboBox<String> jc = new JComboBox<String>();
 		add(jc);
-		jc.addItem("구분");
-		jc.addItem("강좌번호");
-		jc.addItem("교과목명");
-		jc.addItem("학점");
-		jc.addItem("시간");
-		jc.addItem("수강대상(학년)");
-		jc.addItem("담당교수");
-		jc.addItem("강의실");
+		jc.addItem(DefineString.Parser.SORT);
+		jc.addItem(DefineString.Parser.LECTURE_NAME);
+		jc.addItem(DefineString.Parser.CREDIT);
+		jc.addItem(DefineString.Parser.TIME);
+		jc.addItem(DefineString.Parser.GRADE);
+		jc.addItem(DefineString.Parser.PROFESSOR);
+		jc.addItem(DefineString.Parser.LECTURE_ROOM);
 		
 		//jtextfield 객체 추가
 		JTextField jt = new JTextField(10);
