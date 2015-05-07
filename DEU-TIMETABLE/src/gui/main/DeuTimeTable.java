@@ -1,5 +1,6 @@
 package gui.main;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Label;
@@ -46,19 +47,6 @@ public class DeuTimeTable extends JPanel implements AddMenu{
 	private String[] colName = {"구분", "강좌번호", "교과목명", "학점", "시간", "수강대상(학년)", "담당교수", "강의시간 및 강의실"};
 	DefaultTableModel dtm = new DefaultTableModel(colName, bottomRow);
 	private String data[][];
-
-   public static void main(String[] args) {
-      final JPanel c = new DeuTimeTable();
-      c.setPreferredSize(new Dimension(500, 600)); // 윈도우 창 크기
-      
-      // 폰트 설정
-       setUIFont(new FontUIResource(new Font("나눔고딕", 0, 13)));
-      
-      // EDT를 사용해 실행할 GUI 작업을 넣는다.
-      // title과 component
-      main_layout.launch("동의대 시간표 프로그램", c);
-      
-   } 
    
    
    public void top(final JFrame frame) {
@@ -251,6 +239,28 @@ public class DeuTimeTable extends JPanel implements AddMenu{
    
    }
    
+   // 시간표 추가
+   public void timeTable(final JFrame frame) {
+		
+		Object [][]time = {
+				{"09:00 ~ 09:50", "", "", "", "", "", "", ""},
+				{"10:00 ~ 10:50", "", "", "", "", "", "", ""},
+				{"11:00 ~ 11:50", "", "", "", "", "", "", ""},
+				{"12:00 ~ 12:50", "", "", "", "", "", "", ""},
+				{"13:00 ~ 13:50", "", "", "", "", "", "", ""},
+				{"14:00 ~ 14:50", "", "", "", "", "", "", ""},
+				{"15:00 ~ 15:50", "", "", "", "", "", "", ""},
+				{"16:00 ~ 16:50", "", "", "", "", "", "", ""}
+				};
+		String []weekday = {"요일/시간", "월요일", "화요일", "수요일", "목요일", "금요일"};
+		JTable timetable = new JTable(time, weekday);
+		JScrollPane timeweek = new JScrollPane(timetable);
+		Color a = new Color(255, 255, 255);
+		timeweek.setBackground(a);
+		timeweek.setPreferredSize(new Dimension(500, 200));//153 거의 맞음
+		add(timeweek);
+	}
+   
    // 폰트 설정 method
    public static void setUIFont(FontUIResource f) {
         Enumeration keys = UIManager.getDefaults().keys();
@@ -264,6 +274,19 @@ public class DeuTimeTable extends JPanel implements AddMenu{
             }
         }
     }
+   
+   public static void main(String[] args) {
+	      final JPanel c = new DeuTimeTable();
+	      c.setPreferredSize(new Dimension(800, 600)); // 윈도우 창 크기
+	      
+	      // 폰트 설정
+	       setUIFont(new FontUIResource(new Font("나눔고딕", 0, 13)));
+	      
+	      // EDT를 사용해 실행할 GUI 작업을 넣는다.
+	      // title과 component
+	      main_layout.launch("동의대 시간표 프로그램", c);
+	      
+	   } 
 
 }
    

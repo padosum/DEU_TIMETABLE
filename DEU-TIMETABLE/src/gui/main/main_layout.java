@@ -19,6 +19,7 @@ public class main_layout {
         if (component instanceof AddMenu) {
             AddMenu ms = (AddMenu) component;
             ms.top(frame);
+            ms.timeTable(frame);
             ms.middle(frame);
             ms.bottom(frame);
         }
