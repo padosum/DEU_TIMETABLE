@@ -2,6 +2,7 @@ package gui.main;
 
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Label;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -36,6 +37,15 @@ import gui.main.AddMenu;
 import gui.main.main_layout;
 
 public class DeuTimeTable extends JPanel implements AddMenu{
+	Label lbl1, lbl2, lbl3;
+	static int row,col=0;
+	static int bottomRow =0;
+	Object object = "";
+	JTable table, table_add;
+	private String bottomData[][];
+	private String[] colName = {"구분", "강좌번호", "교과목명", "학점", "시간", "수강대상(학년)", "담당교수", "강의시간 및 강의실"};
+	DefaultTableModel dtm = new DefaultTableModel(colName, bottomRow);
+	private String data[][];
 
    public static void main(String[] args) {
       final JPanel c = new DeuTimeTable();
@@ -105,95 +115,108 @@ public class DeuTimeTable extends JPanel implements AddMenu{
    } 
    
    public void middle(final JFrame frame) {
-      FileInputStream fis = null;
-      int rowindex=0;
-      int columnindex=0;
-      int rowindex1=0;
-      int rows1=0;
-      
-       JFileChooser jfc = new JFileChooser();
-       jfc.setMultiSelectionEnabled(true);
-        jfc.showOpenDialog(null);
-        String data[][] = new String[100][100];
-        File selectedFiles[] = jfc.getSelectedFiles();
-        for(int i=0; i<4 ; i++)
-        {
-           
-         try {
-            fis = new FileInputStream(jfc.getSelectedFiles()[i].toString());
-         } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-         }
-          XSSFWorkbook workbook = null;
-         try {
-            workbook = new XSSFWorkbook(fis);
-         } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-         }
-         
-          //시트 수 (첫번째에만 존재하므로 0을 준다)
-          //만약 각 시트를 읽기위해서는 FOR문을 한번더 돌려준다
-          XSSFSheet sheet=workbook.getSheetAt(0);
-          //행의 수
-          int rows=sheet.getPhysicalNumberOfRows();
-          rows1 = rows1 + rows;
-          for(rowindex=0; rowindex<rows; rowindex++){
-             //행을읽는다
-             XSSFRow row=sheet.getRow(rowindex);
-             
-             if(row != null){
-                //셀의 수   
-                int cells=row.getPhysicalNumberOfCells();
-                
-                for(columnindex=0;columnindex<=cells;columnindex++){
-                   //셀값을 읽는다
-                   XSSFCell cell=row.getCell(columnindex);
-                   String value="";
-                   //셀이 빈값일경우를 위한 널체크
-                   if(cell==null){
-                      continue;
-                   }
-                   else{
-                      //타입별로 내용 읽기
-                      switch (cell.getCellType()){
-                      case XSSFCell.CELL_TYPE_FORMULA:
-                         value=cell.getCellFormula();
-                         break;
-                      case XSSFCell.CELL_TYPE_NUMERIC:
-                         value=cell.getNumericCellValue()+"";
-                         break;
-                      case XSSFCell.CELL_TYPE_STRING:
-                         value=cell.getStringCellValue()+"";
-                         break;
-                      case XSSFCell.CELL_TYPE_BLANK:
-                         value=cell.getBooleanCellValue()+"";
-                         break;
-                      case XSSFCell.CELL_TYPE_ERROR:
-                         value=cell.getErrorCellValue()+"";
-                         break;
-                      }
-                      
-                      // 테이블의 각 셀에 들어갈 내용을 이차원 배열에 넣는다
-                      data[rowindex1][columnindex] = value;
-                      
-                      
-                   }
-                   
-                }
-                
-             }
-             rowindex1++;
-          }
-          
-          
-        }
+		FileInputStream fis = null;
+		int rowindex=0;
+		int columnindex=0;
+		int rowindex1=0;
+		 data = new String[100][100];
+		 JFileChooser jfc = new JFileChooser();
+		 jfc.setMultiSelectionEnabled(true);
+	     jfc.showOpenDialog(null);
+	     File selectedFiles[] = jfc.getSelectedFiles(); // 파일 선택
+	     
+	     for(int i=0; i<jfc.getSelectedFiles().length; i++)
+	     {
+	    	 
+	      try {
 
-        
-      
-      // 테이블의 열 이름이 들어갈 내용을 일차원 배열에 넣는다.
-      String[] colName = {"구분", "강좌번호", "교과목명", "학점", "시간", "수강대상(학년)", "담당교수", "강의시간 및 강의실"};
+	         fis = new FileInputStream(jfc.getSelectedFiles()[i].toString()); // 파일이름 불러오기
+	        
+	      } catch (FileNotFoundException e) {
+	         // TODO Auto-generated catch block
+	         e.printStackTrace();
+	      }
+	       XSSFWorkbook workbook = null;
+	      try {
+	         workbook = new XSSFWorkbook(fis);
+	      } catch (IOException e) {
+	         // TODO Auto-generated catch block
+	         e.printStackTrace();
+	      }
+	      
+	       //시트 수 (첫번째에만 존재하므로 0을 준다)
+	       //만약 각 시트를 읽기위해서는 FOR문을 한번더 돌려준다
+	       XSSFSheet sheet=workbook.getSheetAt(0);
+	       //행의 수
+	       int rows=sheet.getPhysicalNumberOfRows();
+	       for(rowindex=0; rowindex<rows; rowindex++)
+	       {
+	          //행을읽는다
+	          XSSFRow row=sheet.getRow(rowindex);
+	          
+	          if(row != null){
+	             //셀의 수   
+	             int cells=row.getPhysicalNumberOfCells();
+	             for(columnindex=0;columnindex<=cells;columnindex++){
+	                //셀값을 읽는다
+	                XSSFCell cell=row.getCell(columnindex);
+	                String value="";
+	                //셀이 빈값일경우를 위한 널체크
+	                if(cell==null){
+	                   continue;
+	                }
+	                else{
+	                   //타입별로 내용 읽기
+	                   switch (cell.getCellType()){
+	                   case XSSFCell.CELL_TYPE_FORMULA:
+	                      value=cell.getCellFormula();
+	                      break;
+	                   case XSSFCell.CELL_TYPE_NUMERIC:
+	                      value=cell.getNumericCellValue()+"";
+	                      break;
+	                   case XSSFCell.CELL_TYPE_STRING:
+	                	   value=cell.getStringCellValue()+"";
+	                      break;
+	                   case XSSFCell.CELL_TYPE_BLANK:
+	                      value=cell.getBooleanCellValue()+"";
+	                      break;
+	                   case XSSFCell.CELL_TYPE_ERROR:
+	                      value=cell.getErrorCellValue()+"";
+	                      break;
+	                   }
+	                }
+	                
+	                data[rowindex1][columnindex] = value;
+	             }
+	          }
+
+	          String kkk = jfc.getSelectedFiles()[i].toString();
+	          if(kkk.contains("학문기초")== true)
+	          {
+		          String value = new String();
+		           value = data[rowindex1][2];
+		         data[rowindex1][2] = data[rowindex1][3];
+		         data[rowindex1][3] = value;
+	          }
+	        	  rowindex1++;
+	       }	       
+	     }
+	     
+		// 테이블의 열 이름이 들어갈 내용을 일차원 배열에 넣는다.
+		
+		String data2[][] = new String[rowindex1][columnindex];
+		
+		for(int i = 0; i < rowindex1 ; i++)
+		{
+			for (int j = 0 ; j < columnindex ; j++)
+			{
+
+					String value = new String();
+					value = data[i][j];
+					data2[i][j] = value;
+			}
+			
+		}
       
       // JTable생성자를 이용하여 테이블을 만든다.
       JTable table = new JTable(data, colName);
