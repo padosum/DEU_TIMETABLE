@@ -21,6 +21,7 @@ public class main_layout {
             ms.top(frame);
             ms.timeTable(frame);
             ms.middle(frame);
+            ms.middle2(frame);
             ms.bottom(frame);
         }
         
