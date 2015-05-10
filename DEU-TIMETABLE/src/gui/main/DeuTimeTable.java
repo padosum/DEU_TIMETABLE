@@ -75,7 +75,7 @@ public class DeuTimeTable extends JPanel implements AddMenu, ActionListener{
 		JMenuItem load = new JMenuItem(DefineString.Menu.LOAD_TIME_TABLE);
 		JMenuItem load_lecture = new JMenuItem(DefineString.Menu.LOAD_HAND_BOOK);
 		
-		JMenuItem about = new JMenuItem("이 프로그램에 대해서...");
+		JMenuItem about = new JMenuItem(DefineString.AboutThis.TITLE);
 
 		// 서브 메뉴 추가
 		menu.add(show);
@@ -246,7 +246,6 @@ public class DeuTimeTable extends JPanel implements AddMenu, ActionListener{
 		String button = e.toString();
 		row = table.getSelectedRow();
 		col = table.getSelectedColumn();
-		int bottomRow2 = table_add.getSelectedRow();
 		
 
 		//System.out.println(bottomData2.length);
