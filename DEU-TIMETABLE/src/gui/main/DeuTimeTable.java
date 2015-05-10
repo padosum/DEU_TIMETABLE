@@ -74,6 +74,7 @@ public class DeuTimeTable extends JPanel implements AddMenu, ActionListener{
 		JMenuItem save = new JMenuItem(DefineString.Menu.SAVE_TIME_TABLE);
 		JMenuItem load = new JMenuItem(DefineString.Menu.LOAD_TIME_TABLE);
 		JMenuItem load_lecture = new JMenuItem(DefineString.Menu.LOAD_HAND_BOOK);
+	    JMenuItem curriculum = new JMenuItem("교육과정 불러오기");
 		
 		JMenuItem about = new JMenuItem(DefineString.AboutThis.TITLE);
 
@@ -83,6 +84,7 @@ public class DeuTimeTable extends JPanel implements AddMenu, ActionListener{
 		menu.add(load);
 		menu.addSeparator();	// 분리선 추가
 		menu.add(load_lecture);
+	    menu.add(curriculum);
 		help.add(about);
 		
 		// 메뉴바에 메뉴 추가
@@ -91,6 +93,40 @@ public class DeuTimeTable extends JPanel implements AddMenu, ActionListener{
 		
 		// 프레임에 메뉴바 추가
 		frame.setJMenuBar(menuBar);
+		
+	      //메뉴 기능 추가
+	      load_lecture.addActionListener(new ActionListener() {
+	        
+	        public void actionPerformed(ActionEvent arg0) {
+	            try                                      
+	             { 
+	               //강의편람 열기
+	                 Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + "201502_sugang_handbook.hwp");
+
+	             } catch (Exception e)                   
+	               { 
+	                   System.out.println("파일이 존재하지 않습니다." );  
+	               } 
+	         } 
+	                   
+	     });
+	      
+	      curriculum.addActionListener(new ActionListener() {
+	      
+	      @Override
+	      public void actionPerformed(ActionEvent arg0) {
+	         // TODO Auto-generated method stub
+	          try                                      
+	                { 
+	                  //강의편람 열기
+	                    Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + "curriculum.pdf");
+
+	                } catch (Exception e)                   
+	                  { 
+	                      System.out.println("파일이 존재하지 않습니다." );  
+	                  } 
+	            } 
+	   });
 		
 		//jcombobox 객체 추가
 		JComboBox<String> jc = new JComboBox<String>();
