@@ -287,14 +287,6 @@ public class DeuTimeTable extends JPanel implements AddMenu, ActionListener{
 		
 		bottomData = new String[20][8];
 		
-		 JPanel panel = new JPanel();
-
-	        panel.add(new JLabel("이름"));        
-	        panel.add(new JLabel("나이"));
-	        panel.add(new JLabel("성별"));
-
-
-
 
 		// 테이블의 열 이름이 들어갈 내용을 일차원 배열에 넣는다.
 		String[] colName = {"구분", "강좌번호", "교과목명", "학점", "시간", "수강대상(학년)", "담당교수", "강의시간 및 강의실"};
