@@ -8,6 +8,8 @@ public class DefineString {
 	public static final String SEARCH = "검색";
 	public static final String ADD = "추가";
 	public static final String REMOVE = "제거";
+	public static final String NO_FILE = "파일이 존재하지 않습니다.";
+	public static final String WARNING = "안돼요";
 	
 	public static class AboutThis {
 		public static final String TITLE = "이 프로그램에 대하여";
@@ -21,22 +23,34 @@ public class DefineString {
 		public static final String HELP = "도움말(H)";
 		public static final String ABOUT = AboutThis.TITLE;
 		public static final String FILE = "파일(F)";
-		public static final String SHOW_TIME_TABLE = "시간표보기(A)";
+		public static final String SHOW_TIME_TABLE = "시간표 보기(A)";
 		public static final String SAVE_TIME_TABLE = "시간표 저장(S)";
 		public static final String LOAD_TIME_TABLE = "시간표 불러오기(L)";
 		public static final String LOAD_HAND_BOOK = "강의편람 불러오기";
-		public static final String SAVE_DAY_IMAGE = "주간시간표 저장하기(D)";
-		public static final String SAVE_NIGHT_IMAGE = "야간시간표 저장하기(N)";
+		public static final String LOAD_CURRICULUM = "교육과정 불러오기";
 	}
 	
 	public static class Parser {
-		public static final String TIME = "요일시간";
+		public static final String TIME = "시간";
 		public static final String GRADE = "학년";
 		public static final String LECTURE_NAME = "교과목명";
-		public static final String LECTURE_ROOM = "강의실";
+		public static final String LECTURE_NUM = "강좌번호";
+		public static final String LECTURE_ROOM = "강의실 및 강의시간";
 		public static final String PROFESSOR = "담당교수";
 		public static final String CREDIT = "학점";
 		public static final String SORT = "구분";
+		public static final String LEARNING_BASE = "학문기초";
+	}
+	
+	public static class Week {
+		public static final String TIME = "요일/시간";
+		public static final String MON = "월";
+		public static final String TUE = "화";
+		public static final String WEN = "수";
+		public static final String THU = "목";
+		public static final String FRI = "금";
+		public static final String SAT = "토";
+		public static final String SUN = "일";
 	}
 
 }

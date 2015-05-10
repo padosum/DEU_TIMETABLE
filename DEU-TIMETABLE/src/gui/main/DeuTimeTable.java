@@ -6,19 +6,16 @@ import java.awt.Font;
 import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.Enumeration;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -28,18 +25,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.UIManager; 	
-import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.plaf.FontUIResource;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumnModel;
-
-import org.apache.poi.hslf.model.Table;
+import javax.swing.table.TableColumn;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.poi.xssf.usermodel.examples.SelectedSheet;
-import org.omg.CORBA.DATA_CONVERSION;
 
 import gui.main.AddMenu;
 import gui.main.main_layout;
@@ -56,7 +48,8 @@ public class DeuTimeTable extends JPanel implements AddMenu, ActionListener{
 	Object object, scheObject = "";
 	JTable table, table_add, timetable;
 	private String bottomData[][];
-	private String[] colName = {"구분", "강좌번호", "교과목명", "학점", "시간", "수강대상(학년)", "담당교수", "강의시간 및 강의실"};
+	private String[] colName = {DefineString.Parser.SORT, DefineString.Parser.LECTURE_NUM, DefineString.Parser.LECTURE_NAME, DefineString.Parser.CREDIT, 
+			DefineString.Parser.TIME, DefineString.Parser.GRADE, DefineString.Parser.PROFESSOR, DefineString.Parser.LECTURE_ROOM};
 	DefaultTableModel dtm = new DefaultTableModel(colName, bottomRow);
 	private String data[][];
 	   static Object [][]time = {
@@ -88,7 +81,7 @@ public class DeuTimeTable extends JPanel implements AddMenu, ActionListener{
 		JMenuItem save = new JMenuItem(DefineString.Menu.SAVE_TIME_TABLE);
 		JMenuItem load = new JMenuItem(DefineString.Menu.LOAD_TIME_TABLE);
 		JMenuItem load_lecture = new JMenuItem(DefineString.Menu.LOAD_HAND_BOOK);
-	    JMenuItem curriculum = new JMenuItem("교육과정 불러오기");
+	    JMenuItem curriculum = new JMenuItem(DefineString.Menu.LOAD_CURRICULUM);
 		
 		JMenuItem about = new JMenuItem(DefineString.AboutThis.TITLE);
 
@@ -119,7 +112,7 @@ public class DeuTimeTable extends JPanel implements AddMenu, ActionListener{
 
 	             } catch (Exception e)                   
 	               { 
-	                   System.out.println("파일이 존재하지 않습니다." );  
+	                   System.out.println(DefineString.NO_FILE);  
 	               } 
 	         } 
 	                   
@@ -137,7 +130,7 @@ public class DeuTimeTable extends JPanel implements AddMenu, ActionListener{
 
 	                } catch (Exception e)                   
 	                  { 
-	                      System.out.println("파일이 존재하지 않습니다." );  
+	                      System.out.println(DefineString.NO_FILE);  
 	                  } 
 	            } 
 	   });
@@ -239,7 +232,7 @@ public class DeuTimeTable extends JPanel implements AddMenu, ActionListener{
 	          }
 
 	          String kkk = jfc.getSelectedFiles()[i].toString();
-	          if(kkk.contains("학문기초")== true)
+	          if(kkk.contains(DefineString.Parser.LEARNING_BASE)== true)
 	          {
 		          String value = new String();
 		           value = data[rowindex1][2];
@@ -327,7 +320,7 @@ public class DeuTimeTable extends JPanel implements AddMenu, ActionListener{
 		        }
 		            
 		    catch (Exception e2) {
-		        JOptionPane.showMessageDialog(this, "안돼요");
+		        JOptionPane.showMessageDialog(this, DefineString.WARNING);
 
 		        
 		         
@@ -350,7 +343,8 @@ public class DeuTimeTable extends JPanel implements AddMenu, ActionListener{
 		
 
 		// 테이블의 열 이름이 들어갈 내용을 일차원 배열에 넣는다.
-		String[] colName = {"구분", "강좌번호", "교과목명", "학점", "시간", "수강대상(학년)", "담당교수", "강의시간 및 강의실"};
+		String[] colName = {DefineString.Parser.SORT, DefineString.Parser.LECTURE_NUM, DefineString.Parser.LECTURE_NAME, DefineString.Parser.CREDIT, 
+				DefineString.Parser.TIME, DefineString.Parser.GRADE, DefineString.Parser.PROFESSOR, DefineString.Parser.LECTURE_ROOM};
 		
 		// JTable생성자를 이용하여 테이블을 만든다.
 		table_add = new JTable(dtm);	
@@ -364,11 +358,30 @@ public class DeuTimeTable extends JPanel implements AddMenu, ActionListener{
 	
 	}
 	
-
+    // 열 너비 지정 메소드 (퍼센테이지로 지정)
+	public static void setJTableColumnsWidth(JTable table, int tablePreferredWidth,
+	        double... percentages) {
+	    double total = 0;
+	    for (int i = 0; i < table.getColumnModel().getColumnCount(); i++) {
+	        total += percentages[i];
+	    }
+	 
+	    for (int i = 0; i < table.getColumnModel().getColumnCount(); i++) {
+	        TableColumn column = table.getColumnModel().getColumn(i);
+	        column.setPreferredWidth((int)
+	                (tablePreferredWidth * (percentages[i] / total)));
+	    }
+	}
 	
 	public void timeTable(final JFrame frame) {
-	      String []weekday = {"요일/시간", "월요일", "화요일", "수요일", "목요일", "금요일"};
+	      String []weekday = {DefineString.Week.TIME, DefineString.Week.MON, DefineString.Week.TUE, DefineString.Week.WEN, DefineString.Week.THU, DefineString.Week.FRI};
 	      timetable= new JTable(time, weekday);
+	      
+	      // 행 세로 길이
+	      timetable.setRowHeight(45);
+	      // 총 길이 500에 퍼센테이지로 지정
+	      setJTableColumnsWidth(timetable, 500, 20, 16, 16, 16, 16, 16);
+	      
 	      JScrollPane timeweek = new JScrollPane(timetable);
 	      Color a = new Color(255, 255, 255);
 	      timeweek.setBackground(a);
@@ -416,7 +429,7 @@ public class DeuTimeTable extends JPanel implements AddMenu, ActionListener{
 				int day1[] = {1,2,3,4,5,6,7,8,9,10,11};
 				
 				
-				if(trans.contains("월"))
+				if(trans.contains(DefineString.Week.MON))
 				{
 					for(int i=0; i<12 ; i++)
 					{
@@ -443,7 +456,7 @@ public class DeuTimeTable extends JPanel implements AddMenu, ActionListener{
 				}
 			}
 				
-				if(trans.contains("화"))
+				if(trans.contains(DefineString.Week.TUE))
 				{
 					for(int i=0; i<12 ; i++)
 					{
@@ -469,7 +482,7 @@ public class DeuTimeTable extends JPanel implements AddMenu, ActionListener{
 				
 					
 				
-				if(trans.contains("수"))
+				if(trans.contains(DefineString.Week.WEN))
 				{
 					for(int i=0; i<12 ; i++)
 					{
@@ -494,7 +507,7 @@ public class DeuTimeTable extends JPanel implements AddMenu, ActionListener{
 					}
 				}
 
-				if(trans.contains("목"))
+				if(trans.contains(DefineString.Week.THU))
 				{
 					for(int i=0; i<12 ; i++)
 					{
@@ -519,7 +532,7 @@ public class DeuTimeTable extends JPanel implements AddMenu, ActionListener{
 				}
 				
 				
-				if(trans.contains("금"))
+				if(trans.contains(DefineString.Week.FRI))
 				{
 					for(int i=0; i<12 ; i++)
 					{
