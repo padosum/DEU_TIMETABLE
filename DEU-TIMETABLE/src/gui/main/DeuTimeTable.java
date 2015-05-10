@@ -249,7 +249,7 @@ public class DeuTimeTable extends JPanel implements AddMenu, ActionListener{
 		
 
 		//System.out.println(bottomData2.length);
-		if (button.contains("추가"))
+		if (button.contains(DefineString.ADD))
 		{
 			
 			
