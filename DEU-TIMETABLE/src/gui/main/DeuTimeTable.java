@@ -22,6 +22,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -52,12 +53,25 @@ public class DeuTimeTable extends JPanel implements AddMenu, ActionListener{
 	Label lbl1, lbl2, lbl3;
 	static int row,col=0;
 	static int bottomRow =0;
-	Object object = "";
-	JTable table, table_add;
+	Object object, scheObject = "";
+	JTable table, table_add, timetable;
 	private String bottomData[][];
 	private String[] colName = {"구분", "강좌번호", "교과목명", "학점", "시간", "수강대상(학년)", "담당교수", "강의시간 및 강의실"};
 	DefaultTableModel dtm = new DefaultTableModel(colName, bottomRow);
 	private String data[][];
+	   static Object [][]time = {
+           {"09:00 ~ 09:50", "", "", "", "", "", "", ""},
+           {"10:00 ~ 10:50", "", "", "", "", "", "", ""},
+           {"11:00 ~ 11:50", "", "", "", "", "", "", ""},
+           {"12:00 ~ 12:50", "", "", "", "", "", "", ""},
+           {"13:00 ~ 13:50", "", "", "", "", "", "", ""},
+           {"14:00 ~ 14:50", "", "", "", "", "", "", ""},
+           {"15:00 ~ 15:50", "", "", "", "", "", "", ""},
+           {"16:00 ~ 16:50", "", "", "", "", "", "", ""},
+           {"17:00 ~ 17:50", "", "", "", "", "", "", ""},
+           {"18:00 ~ 18:50", "", "", "", "", "", "", ""},
+           {"19:00 ~ 19:50", "", "", "", "", "", "", ""}
+           };
 	
 	
 	public void top(final JFrame frame) {
@@ -300,20 +314,31 @@ public class DeuTimeTable extends JPanel implements AddMenu, ActionListener{
 			}
 			dtm.addRow(bottomData[bottomRow]);
 			bottomRow++;
+			Schedule();
 
 			// JTable생성자를 이용하여 테
 		}
 		
+
 		else
 		{
-			dtm.removeRow(table_add.getSelectedRow());
+			try {
+		            dtm.removeRow(table_add.getSelectedRow());
+		        }
+		            
+		    catch (Exception e2) {
+		        JOptionPane.showMessageDialog(this, "안돼요");
 
+		        
+		         
+		 }
 			bottomRow--;
 			
 		}
 
 		
 		table_add.updateUI();
+		timetable.updateUI();
 		
 	}
 	
@@ -341,29 +366,16 @@ public class DeuTimeTable extends JPanel implements AddMenu, ActionListener{
 	
 
 	
-public void timeTable(final JFrame frame) {
-		
-		Object [][]time = {
-				{"09:00 ~ 09:50", "", "", "", "", "", "", ""},
-				{"10:00 ~ 10:50", "", "", "", "", "", "", ""},
-				{"11:00 ~ 11:50", "", "", "", "", "", "", ""},
-				{"12:00 ~ 12:50", "", "", "", "", "", "", ""},
-				{"13:00 ~ 13:50", "", "", "", "", "", "", ""},
-				{"14:00 ~ 14:50", "", "", "", "", "", "", ""},
-				{"15:00 ~ 15:50", "", "", "", "", "", "", ""},
-				{"16:00 ~ 16:50", "", "", "", "", "", "", ""}
-				};
-		String []weekday = {"요일/시간", "월요일", "화요일", "수요일", "목요일", "금요일"};
-		JTable timetable = new JTable(time, weekday);
-		JScrollPane timeweek = new JScrollPane(timetable);
-		Color a = new Color(255, 255, 255);
-		timeweek.setBackground(a);
-		timeweek.setPreferredSize(new Dimension(500, 200));//153 거의 맞음
-		add(timeweek);
-		
-		
-		
-	}
+	public void timeTable(final JFrame frame) {
+	      String []weekday = {"요일/시간", "월요일", "화요일", "수요일", "목요일", "금요일"};
+	      timetable= new JTable(time, weekday);
+	      JScrollPane timeweek = new JScrollPane(timetable);
+	      Color a = new Color(255, 255, 255);
+	      timeweek.setBackground(a);
+	      timeweek.setPreferredSize(new Dimension(500, 200));//153 거의 맞음
+	      add(timeweek);
+	      
+	   }
 	
 	
 	// 폰트 설정 method
@@ -379,6 +391,163 @@ public void timeTable(final JFrame frame) {
             }
         }
     }
+	
+	private void Schedule()
+	{
+
+
+			try {
+				object = table.getValueAt(row, 7);
+				scheObject = table.getValueAt(row, 2);
+				String trans = (String)object;
+				StringBuffer trans1 = new StringBuffer(trans);
+				trans1.reverse();
+				String retrans = trans1.toString();
+				int day = 0;
+				String print = "";
+				String backprint = "";
+				int i1 = trans.indexOf('[');
+				int i2 = trans.indexOf(']');
+				int j1 = retrans.indexOf(']');
+				int j2 = retrans.indexOf('[');
+				print = trans.substring(i1, i2+1);
+				backprint = retrans.substring(j1, j2+1);
+				
+				int day1[] = {1,2,3,4,5,6,7,8,9,10,11};
+				
+				
+				if(trans.contains("월"))
+				{
+					for(int i=0; i<12 ; i++)
+					{
+						String number = Integer.toString(day1[i]);
+						
+						if(print.contains(number) )
+						{
+								time[i][1] = (String) scheObject;
+							
+						}
+
+					}
+					
+					for(int i3=0; i3<12 ; i3++)
+					{
+						String number2 = Integer.toString(day1[i3]);
+						
+						if(backprint.contains(number2) )
+						{
+								time[i3][1] = (String) scheObject;
+							
+						}
+
+				}
+			}
+				
+				if(trans.contains("화"))
+				{
+					for(int i=0; i<12 ; i++)
+					{
+						String number = Integer.toString(day1[i]);		
+						if(print.contains(number) )
+						{
+								time[i][2] = (String) scheObject;
+							
+						}
+							
+					}
+					
+					for(int i3=0; i3<12 ; i3++)
+					{
+						String number2 = Integer.toString(day1[i3]);
+						if(backprint.contains(number2) )
+						{
+								time[i3][2] = (String) scheObject;
+							
+						}
+					}
+				}
+				
+					
+				
+				if(trans.contains("수"))
+				{
+					for(int i=0; i<12 ; i++)
+					{
+						String number = Integer.toString(day1[i]);
+						
+						if(print.contains(number) )
+						{
+								time[i][3] = (String) scheObject;
+							
+						}
+							
+					}
+					
+					for(int i3=0; i3<12 ; i3++)
+					{
+						String number2 = Integer.toString(day1[i3]);
+						if(backprint.contains(number2) )
+						{
+								time[i3][3] = (String) scheObject;
+							
+						}
+					}
+				}
+
+				if(trans.contains("목"))
+				{
+					for(int i=0; i<12 ; i++)
+					{
+						String number = Integer.toString(day1[i]);
+						if(print.contains(number) )
+						{
+								time[i][4] = (String) scheObject;
+							
+						}
+							
+					}
+					
+					for(int i3=0; i3<12 ; i3++)
+					{
+						String number2 = Integer.toString(day1[i3]);
+						if(backprint.contains(number2) )
+						{
+								time[i3][4] = (String) scheObject;
+							
+						}
+					}
+				}
+				
+				
+				if(trans.contains("금"))
+				{
+					for(int i=0; i<12 ; i++)
+					{
+						String number = Integer.toString(day1[i]);
+						if(print.contains(number) )
+						{
+								time[i][5] = (String) scheObject;
+							
+						}
+							
+					}
+					
+					for(int i3=0; i3<12 ; i3++)
+					{
+						String number2 = Integer.toString(day1[i3]);
+						if(backprint.contains(number2) )
+						{
+								time[i3][5] = (String) scheObject;
+							
+						}
+					}
+				}
+			}
+
+			catch (Exception e) {
+				// TODO: handle exception
+			}
+	}
 	
 	public static void main(String[] args) {
 		final JPanel c = new DeuTimeTable();
