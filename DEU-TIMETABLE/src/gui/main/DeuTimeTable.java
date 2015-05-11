@@ -26,8 +26,11 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.UIManager; 	
 import javax.swing.plaf.FontUIResource;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -407,159 +410,201 @@ public class DeuTimeTable extends JPanel implements AddMenu, ActionListener{
 	
 	private void Schedule()
 	{
+        object = table.getValueAt(row, 7);
+        scheObject = table.getValueAt(row, 2);
+        String trans = (String)object;
+        StringBuffer trans1 = new StringBuffer(trans);
+        trans1.reverse();
+        String retrans = trans1.toString();
+        int day = 0;
+        String print = "";
+        String backprint = "";
+        int i1 = trans.indexOf('[');
+        int i2 = trans.indexOf(']');
+        int j1 = retrans.indexOf(']');
+        int j2 = retrans.indexOf('[');
+        print = trans.substring(i1, i2+1);
+        backprint = retrans.substring(j1, j2+1);
+        StringBuffer trans2 = new StringBuffer(backprint);
+        trans2.reverse();
+        String retrans2 = trans2.toString();
+				
+		int day1[] = {1,2,3,4,5,6,7,8,9,10,11};
+				
+				
+		//월요일
+	    if(trans.contains(DefineString.Week.MON))
+	    {
+	    	for(int i=0; i<11 ; i++)
+	        {
+	            if(i == 0 || i ==1)
+	            {
+	               if (trans.contains("10") || trans.contains("11"))
+	                    continue;
+	             }
+	            String number = Integer.toString(day1[i]);
+	              if(print.contains(number))
+	                  time[i][1] = (String) scheObject;
+	               }
+	            }
+	            
+	            
+	            //화요일
+	            else if(trans.contains(DefineString.Week.TUE))
+	            {
+	               for(int i=0; i<11 ; i++)
+	               {
+	                  if(i == 0 || i ==1)
+	                  {
+	                     if (trans.contains("10") || trans.contains("11"))
+	                           continue;
+	                  }
+	                  String number = Integer.toString(day1[i]);      
+	                  if(print.contains(number) )
+	                     time[i][2] = (String) scheObject;
+	               }
+	            }
+	            
+	            //수요일
+	            else if(trans.contains(DefineString.Week.WEN))
+	            {
+	               for(int i=0; i<11 ; i++)
+	               {
+	                  if(i == 0 || i ==1)
+	                  {
+	                     if (trans.contains("10") || trans.contains("11"))
+	                           continue;
+	                  }
+	                  String number = Integer.toString(day1[i]);
+	                  if(print.contains(number) )
+	                     time[i][3] = (String) scheObject;
+	               }
+	            }
+	            
+	            //목요일
+	            else if(trans.contains(DefineString.Week.THU))
+	            {
+	               for(int i=0; i<11 ; i++)
+	               {
+	                  if(i == 0 || i ==1)
+	                  {
+	                     if (trans.contains("10") || trans.contains("11"))
+	                           continue;
+	                  }
+	                  String number = Integer.toString(day1[i]);
+	                  if(print.contains(number))
+	                     time[i][4] = (String) scheObject;
+	               }
+	            }
+	      
+	            //금요일
+	            else
+	            {
+	               for(int i=0; i<11 ; i++)
+	               {
+	                  if(i == 0 || i ==1)
+	                  {
+	                     if (trans.contains("10") || trans.contains("11"))
+	                           continue;
+	                  }
+	                  String number = Integer.toString(day1[i]);
+	                  if(print.contains(number) )
+	                     time[i][5] = (String) scheObject;
+	               }
+	            }
+	            
+	            
+	            
+	            
+	            //월요일
+	            if(retrans2.contains(DefineString.Week.MON))
+	            {
+	               for(int i=0; i<11 ; i++)
+	               {
+	                  if(i == 0 || i ==1)
+	                  {
+	                     if (trans.contains("10") || trans.contains("11"))
+	                           continue;
+	                  }
+	                  String number = Integer.toString(day1[i]);
+	                  if(retrans2.contains(number))
+	                     time[i][1] = (String) scheObject;
+	               }
+	            }
 
-
-			try {
-				object = table.getValueAt(row, 7);
-				scheObject = table.getValueAt(row, 2);
-				String trans = (String)object;
-				StringBuffer trans1 = new StringBuffer(trans);
-				trans1.reverse();
-				String retrans = trans1.toString();
-				int day = 0;
-				String print = "";
-				String backprint = "";
-				int i1 = trans.indexOf('[');
-				int i2 = trans.indexOf(']');
-				int j1 = retrans.indexOf(']');
-				int j2 = retrans.indexOf('[');
-				print = trans.substring(i1, i2+1);
-				backprint = retrans.substring(j1, j2+1);
-				
-				int day1[] = {1,2,3,4,5,6,7,8,9,10,11};
-				
-				
-				if(trans.contains(DefineString.Week.MON))
-				{
-					for(int i=0; i<12 ; i++)
-					{
-						String number = Integer.toString(day1[i]);
-						
-						if(print.contains(number) )
-						{
-								time[i][1] = (String) scheObject;
-							
-						}
-
-					}
-					
-					for(int i3=0; i3<12 ; i3++)
-					{
-						String number2 = Integer.toString(day1[i3]);
-						
-						if(backprint.contains(number2) )
-						{
-								time[i3][1] = (String) scheObject;
-							
-						}
-
-				}
-			}
-				
-				if(trans.contains(DefineString.Week.TUE))
-				{
-					for(int i=0; i<12 ; i++)
-					{
-						String number = Integer.toString(day1[i]);		
-						if(print.contains(number) )
-						{
-								time[i][2] = (String) scheObject;
-							
-						}
-							
-					}
-					
-					for(int i3=0; i3<12 ; i3++)
-					{
-						String number2 = Integer.toString(day1[i3]);
-						if(backprint.contains(number2) )
-						{
-								time[i3][2] = (String) scheObject;
-							
-						}
-					}
-				}
-				
-					
-				
-				if(trans.contains(DefineString.Week.WEN))
-				{
-					for(int i=0; i<12 ; i++)
-					{
-						String number = Integer.toString(day1[i]);
-						
-						if(print.contains(number) )
-						{
-								time[i][3] = (String) scheObject;
-							
-						}
-							
-					}
-					
-					for(int i3=0; i3<12 ; i3++)
-					{
-						String number2 = Integer.toString(day1[i3]);
-						if(backprint.contains(number2) )
-						{
-								time[i3][3] = (String) scheObject;
-							
-						}
-					}
-				}
-
-				if(trans.contains(DefineString.Week.THU))
-				{
-					for(int i=0; i<12 ; i++)
-					{
-						String number = Integer.toString(day1[i]);
-						if(print.contains(number) )
-						{
-								time[i][4] = (String) scheObject;
-							
-						}
-							
-					}
-					
-					for(int i3=0; i3<12 ; i3++)
-					{
-						String number2 = Integer.toString(day1[i3]);
-						if(backprint.contains(number2) )
-						{
-								time[i3][4] = (String) scheObject;
-							
-						}
-					}
-				}
-				
-				
-				if(trans.contains(DefineString.Week.FRI))
-				{
-					for(int i=0; i<12 ; i++)
-					{
-						String number = Integer.toString(day1[i]);
-						if(print.contains(number) )
-						{
-								time[i][5] = (String) scheObject;
-							
-						}
-							
-					}
-					
-					for(int i3=0; i3<12 ; i3++)
-					{
-						String number2 = Integer.toString(day1[i3]);
-						if(backprint.contains(number2) )
-						{
-								time[i3][5] = (String) scheObject;
-							
-						}
-					}
-				}
-			}
-
-			catch (Exception e) {
-				// TODO: handle exception
-			}
+	            //화요일
+	            else if(retrans2.contains(DefineString.Week.TUE))
+	            {
+	               for(int i=0; i<11 ; i++)
+	               {
+	                  if(i == 0 || i ==1)
+	                  {
+	                     if (trans.contains("10") || trans.contains("11"))
+	                           continue;
+	                  }
+	                  String number = Integer.toString(day1[i]);      
+	                  if(retrans2.contains(number) )
+	                     time[i][2] = (String) scheObject;
+	               }
+	            }
+	            
+	            //수요일
+	            else if(retrans2.contains(DefineString.Week.WEN))
+	            {
+	               for(int i=0; i<11 ; i++)
+	               {
+	                  if(i == 0 || i ==1)
+	                  {
+	                     if (trans.contains("10") || trans.contains("11"))
+	                           continue;
+	                  }
+	                  String number = Integer.toString(day1[i]);
+	                  if(retrans2.contains(number) )
+	                     time[i][3] = (String) scheObject;
+	               }
+	            }
+	            
+	            //목요일
+	            else if(retrans2.contains(DefineString.Week.THU))
+	            {
+	               for(int i=0; i<11 ; i++)
+	               {
+	                  if(i == 0 || i ==1)
+	                  {
+	                     if (trans.contains("10") || trans.contains("11"))
+	                           continue;
+	                  }
+	                  String number = Integer.toString(day1[i]);
+	                  if(retrans2.contains(number))
+	                     time[i][4] = (String) scheObject;
+	               }
+	            }
+	            
+	            //금요일
+	            else
+	            {
+	               for(int i=0; i<11 ; i++)
+	               {
+	                  if(i == 0 || i ==1)
+	                  {
+	                     if (trans.contains("10") || trans.contains("11"))
+	                           continue;
+	                  }
+	                  String number = Integer.toString(day1[i]);
+	                  if(retrans2.contains(number) )
+	                     time[i][5] = (String) scheObject;
+	               }
+	            }
+	            
+	            
+	            //중앙정렬
+	            DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer();
+	                  dtcr.setHorizontalAlignment(SwingConstants.CENTER);
+	                  TableColumnModel tcm = timetable.getColumnModel();
+	                  for(int i = 0 ; i< tcm.getColumnCount() ; i++)
+	                  {
+	                   tcm.getColumn(i).setCellRenderer(dtcr);
+	                  }
 	}
 	
 	public static void main(String[] args) {
