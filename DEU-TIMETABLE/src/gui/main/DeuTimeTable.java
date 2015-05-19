@@ -75,6 +75,9 @@ public class DeuTimeTable extends JFrame implements ActionListener {
            {"19:00 ~ 19:50", "", "", "", "", "", "", ""}
            };
 	   
+		// 색상지정
+	    Color blue = new Color(0x0B67CD);
+	   
 	   
 	   
 	/**
@@ -87,7 +90,7 @@ public class DeuTimeTable extends JFrame implements ActionListener {
 	 * Create the frame.
 	 */
 	public DeuTimeTable() {
-		setResizable(true);
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1000, 750);
 		setTitle(DefineString.TITLE);
@@ -332,8 +335,16 @@ public class DeuTimeTable extends JFrame implements ActionListener {
 		    }
 			
 		};
-	    
+		
+		// table 색상 지정
+		table.getTableHeader().setBackground(blue); // 배경색
+		table.getTableHeader().setForeground(Color.white); // 글자색
+	
+		
 		JScrollPane scrollPane = new JScrollPane();
+		// 배경 색
+		scrollPane.getViewport().setBackground(Color.WHITE);
+		
 		middle.add(scrollPane);
 	    scrollPane.setViewportView(table);
 		
@@ -373,6 +384,12 @@ public class DeuTimeTable extends JFrame implements ActionListener {
 		};
 		scrollPane_1.setViewportView(table_add);
 		
+		table_add.getTableHeader().setBackground(blue); // 배경색
+		table_add.getTableHeader().setForeground(Color.white); // 글자색
+		
+		// 배경 색
+		scrollPane_1.getViewport().setBackground(Color.WHITE);
+		
 		JLabel label_1 = new JLabel("");
 		panel.add(label_1);
 		
@@ -410,10 +427,13 @@ public class DeuTimeTable extends JFrame implements ActionListener {
                tcm.getColumn(i).setCellRenderer(dtcr);
               }
 	    
-	    Color a = new Color(255, 255, 255);
+	    
 		timeweek.setViewportView(timetable);
-	    timeweek.setBackground(a);
-	    timeweek.setPreferredSize(new Dimension(500, 200));
+	    timeweek.setPreferredSize(new Dimension(timetable.WIDTH, timetable.HEIGHT));
+	    
+	    // 색상 지정
+		timetable.getTableHeader().setBackground(blue); // 배경색
+		timetable.getTableHeader().setForeground(Color.white); // 글자색
 	    
 	    
 	}
