@@ -12,6 +12,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -22,14 +23,20 @@ import javax.swing.JComboBox;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -216,8 +223,16 @@ public class DeuTimeTable extends JFrame implements ActionListener {
 		// middle 패널
 		JPanel middle = new JPanel();
 		panel.add(middle);
-		middle.setLayout(new FlowLayout(FlowLayout.CENTER, 3, 5));
+		//middle.setLayout(new FlowLayout(FlowLayout.CENTER, 3, 5));
+		middle.setLayout(new BoxLayout(middle, BoxLayout.X_AXIS));
 		
+		JPanel panel_6 = new JPanel();
+		middle.add(panel_6);
+		panel_6.setLayout(new GridLayout(1, 2));
+		
+		JPanel panel_7 = new JPanel();
+		panel_6.add(panel_7);
+		panel_7.setLayout(new BoxLayout(panel_7, BoxLayout.X_AXIS));
 		
 		
 		FileInputStream fis = null;
@@ -339,32 +354,125 @@ public class DeuTimeTable extends JFrame implements ActionListener {
 		// table 색상 지정
 		table.getTableHeader().setBackground(blue); // 배경색
 		table.getTableHeader().setForeground(Color.white); // 글자색
-	
+		
+		// 열 숨기기
+		table.getColumn(DefineString.Parser.CREDIT).setPreferredWidth(0);
+		table.getColumn(DefineString.Parser.CREDIT).setMinWidth(0);
+		table.getColumn(DefineString.Parser.CREDIT).setWidth(0);
+		table.getColumn(DefineString.Parser.CREDIT).setMaxWidth(0);
+		
+		table.getColumn(DefineString.Parser.TIME).setPreferredWidth(0);
+		table.getColumn(DefineString.Parser.TIME).setMinWidth(0);
+		table.getColumn(DefineString.Parser.TIME).setWidth(0);
+		table.getColumn(DefineString.Parser.TIME).setMaxWidth(0);
+		
+		table.getColumn(DefineString.Parser.GRADE).setPreferredWidth(0);
+		table.getColumn(DefineString.Parser.GRADE).setMinWidth(0);
+		table.getColumn(DefineString.Parser.GRADE).setWidth(0);
+		table.getColumn(DefineString.Parser.GRADE).setMaxWidth(0);
+		
+		table.getColumn(DefineString.Parser.PROFESSOR).setPreferredWidth(0);
+		table.getColumn(DefineString.Parser.PROFESSOR).setMinWidth(0);
+		table.getColumn(DefineString.Parser.PROFESSOR).setWidth(0);
+		table.getColumn(DefineString.Parser.PROFESSOR).setMaxWidth(0);
+		
+		table.getColumn(DefineString.Parser.LECTURE_ROOM).setPreferredWidth(0);
+		table.getColumn(DefineString.Parser.LECTURE_ROOM).setMinWidth(0);
+		table.getColumn(DefineString.Parser.LECTURE_ROOM).setWidth(0);
+		table.getColumn(DefineString.Parser.LECTURE_ROOM).setMaxWidth(0);
+		
+		table.getColumn(DefineString.Parser.LECTURE_NUM).setPreferredWidth(0);
+		table.getColumn(DefineString.Parser.LECTURE_NUM).setMinWidth(0);
+		table.getColumn(DefineString.Parser.LECTURE_NUM).setWidth(0);
+		table.getColumn(DefineString.Parser.LECTURE_NUM).setMaxWidth(0);
 		
 		JScrollPane scrollPane = new JScrollPane();
 		// 배경 색
 		scrollPane.getViewport().setBackground(Color.WHITE);
 		
-		middle.add(scrollPane);
+		//middle.add(scrollPane);
 	    scrollPane.setViewportView(table);
+	    panel_7.add(scrollPane);
 		
+	    	    
+	    JPanel panel_4 = new JPanel();
+	    panel_6.add(panel_4);
+	    //panel_4.setLayout(new FlowLayout( FlowLayout.LEFT, 5, 5));
+	    panel_4.setLayout(new GridLayout(8,2,20,10));
 	    
-	    // 추가 삭제 버튼 
-		JButton add = new JButton(DefineString.ADD);
-		middle.add(add);
-		
-		JButton remove = new JButton(DefineString.REMOVE);
-		middle.add(remove);
-		
-		add.addActionListener(this);
-		remove.addActionListener(this);
-		
+	    // 과목 정보
+	    JTextField title_tf, num_tf, sort_tf, credit_tf, pro_tf, time_tf,  grade_tf, room_tf;
+	    JPanel empno_p, name_p, pos_p, dept_p, pro_p, time_p, grade_p, room_p;
+        empno_p = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        name_p = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        pos_p = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        dept_p = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        pro_p = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        time_p = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        grade_p = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        room_p = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        
+        empno_p.add(new JLabel("교과목명: "));
+        empno_p.add(title_tf = new JTextField(15));
+        
+        UIManager.put("TextField.disabledBackground", Color.WHITE);
+
+        title_tf.setDisabledTextColor(Color.WHITE);
+	    title_tf.setEditable(false);
+        
+        name_p.add(new JLabel("강좌번호:"));
+        name_p.add(num_tf = new JTextField(7));
+        
+        pos_p.add(new JLabel("학점:"));
+        pos_p.add(credit_tf = new JTextField(2));
+        
+        dept_p.add(new JLabel("이수구분:"));
+        dept_p.add(sort_tf = new JTextField(3));
+        
+        pro_p.add(new JLabel("교수명:"));
+        pro_p.add(pro_tf = new JTextField(15));
+        
+        time_p.add(new JLabel("시간:"));
+        time_p.add(time_tf = new JTextField(4));
+        
+        grade_p.add(new JLabel("권장학년:"));
+        grade_p.add(grade_tf = new JTextField(10));
+        
+        room_p.add(new JLabel("강의실 및 강의시간:"));
+        room_p.add(room_tf = new JTextField(15));
+        
+       
+        panel_4.add(empno_p);
+        panel_4.add(name_p);
+        panel_4.add(pos_p);
+        panel_4.add(dept_p);
+        panel_4.add(pro_p);
+        panel_4.add(time_p);
+        panel_4.add(grade_p);
+        panel_4.add(room_p);
+
 		
 		JLabel label = new JLabel("");
 		middle.add(label);
 		
 		JPanel bottom = new JPanel();
 		panel.add(bottom);
+		
+		JPanel panel_5 = new JPanel();
+		bottom.add(panel_5);
+		FlowLayout flowLayout = (FlowLayout) panel_5.getLayout();
+		flowLayout.setAlignment(FlowLayout.LEADING);
+		//panel_5.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		
+	    // 추가 삭제 버튼 
+		JButton add = new JButton(DefineString.ADD);
+		panel_5.add(add);
+		
+		JButton remove = new JButton(DefineString.REMOVE);
+		panel_5.add(remove);
+		
+		add.addActionListener(this);
+		remove.addActionListener(this);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
 		bottom.add(scrollPane_1);
@@ -435,6 +543,38 @@ public class DeuTimeTable extends JFrame implements ActionListener {
 		timetable.getTableHeader().setBackground(blue); // 배경색
 		timetable.getTableHeader().setForeground(Color.white); // 글자색
 	    
+		table.getTableHeader().setReorderingAllowed(false); // 셀 고정
+		
+		table.addMouseListener(new MouseAdapter() {
+			
+			public void mouseClicked(MouseEvent e) {
+				
+				if(table.getSelectedRow() != -1 && table.getSelectedColumn() != -1 ) {
+					
+				
+					String selSort = table.getValueAt(table.getSelectedRow(), 0).toString();
+					sort_tf.setText(selSort);
+					String selNum = table.getValueAt(table.getSelectedRow(), 1).toString();
+					num_tf.setText(selNum);
+					String selTitle = table.getValueAt(table.getSelectedRow(), 2).toString();
+					title_tf.setText(selTitle);
+					String selCredit = table.getValueAt(table.getSelectedRow(), 3).toString();
+					credit_tf.setText(selCredit);
+					String selTime = table.getValueAt(table.getSelectedRow(), 4).toString();
+					time_tf.setText(selTime);
+					String selGrade = table.getValueAt(table.getSelectedRow(), 5).toString();
+					grade_tf.setText(selGrade);
+					String selPro = table.getValueAt(table.getSelectedRow(), 6).toString();
+					pro_tf.setText(selPro);
+					String selRoom = table.getValueAt(table.getSelectedRow(), 7).toString();
+					room_tf.setText(selRoom);
+				
+				}
+				
+			}
+		
+		});
+		
 	    
 	}
 	
@@ -713,6 +853,7 @@ public class DeuTimeTable extends JFrame implements ActionListener {
 	            
 
 	}
+	
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
