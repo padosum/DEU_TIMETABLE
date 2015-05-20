@@ -24,6 +24,7 @@ public class DefineString {
       public static final String ABOUT = AboutThis.TITLE;
       public static final String FILE = "파일(F)";
       public static final String SAVE_TIME_TABLE = "시간표 저장(S)";
+      public static final String SAVE_TIME_IMG = "시간표 저장(이미지)";
       public static final String LOAD_TIME_TABLE = "시간표 불러오기(L)";
       public static final String LOAD_HAND_BOOK = "강의편람 불러오기";
       public static final String LOAD_CURRICULUM = "교육과정 불러오기";

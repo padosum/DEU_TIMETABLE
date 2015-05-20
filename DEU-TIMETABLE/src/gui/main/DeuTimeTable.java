@@ -3,6 +3,7 @@ package gui.main;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -10,6 +11,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.JComponent;
@@ -28,6 +30,7 @@ import javax.swing.UIManager;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -37,12 +40,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import javax.swing.JLabel;
 
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -115,6 +124,7 @@ public class DeuTimeTable extends JFrame implements ActionListener {
 				
 		// 서브 메뉴 생성
 		JMenuItem save = new JMenuItem(DefineString.Menu.SAVE_TIME_TABLE);
+		JMenuItem save_img = new JMenuItem(DefineString.Menu.SAVE_TIME_IMG);
 		JMenuItem load = new JMenuItem(DefineString.Menu.LOAD_TIME_TABLE);
 		JMenuItem load_lecture = new JMenuItem(DefineString.Menu.LOAD_HAND_BOOK);
 	    JMenuItem curriculum = new JMenuItem(DefineString.Menu.LOAD_CURRICULUM);
@@ -124,6 +134,7 @@ public class DeuTimeTable extends JFrame implements ActionListener {
 		// 서브 메뉴 추가
 		menu.add(save);
 		menu.add(load);
+		menu.add(save_img);
 		menu.addSeparator();	// 분리선 추가
 		menu.add(load_lecture);
 		menu.add(curriculum);
@@ -135,6 +146,131 @@ public class DeuTimeTable extends JFrame implements ActionListener {
 		menuBar.add(help);
 		
 		// 메뉴 기능 추가
+	      // 메뉴 기능 추가
+        //시간표 저장
+        save.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent arg0) {
+           // TODO Auto-generated method stub
+           
+        
+           XSSFWorkbook wb = new XSSFWorkbook(); // Excel 2007 이상, 대용량 Excel 처리에 적합하며 '쓰기전용'임
+           
+            /* (2) 새로운 Sheet 생성 */
+            Sheet sheet = wb.createSheet("First sheet");
+            if( sheet == null ){
+              /*test*/System.out.println("Sheet1 is Null!");
+              return;
+            }
+          
+            /* (3) 새로운 Sheet에 Row를 만든 후 해당 Row의 각 Cell에 값을 입력
+                즉, Sheet -> Row -> Cell 순서로 접근하여 값을 입력한다. */
+             //Row 번호는 0,1,2... 순서, 따라서 createRow(1)는 2번째 Row 생성
+            for (int i = 0 ; i < timetable.getRowCount() ; i++)
+              {
+               Row row1 = sheet.createRow(i);
+                 for(int j = 0 ; j < timetable.getColumnCount(); j++)
+                 {
+               Cell cell = row1.createCell(j); //Cell 번호도 0,1,2... 순서임
+               cell.setCellValue((String)timetable.getValueAt(i, j)); //각 Cell에 0, 1, 2, 3, 4 입력
+            }
+              }
+            try {
+                FileOutputStream fileOut = new FileOutputStream("yoyo.xlsx");
+                wb.write(fileOut);
+                fileOut.close();
+                wb.close(); //HSSFWorkbook. XSSFWorkbook 사용시 사용
+                //wb.dispose(); //SXSSFWorkbook 사용시 사용
+             } catch (FileNotFoundException e) {
+                e.printStackTrace();
+             } catch (IOException e) {
+                e.printStackTrace();
+             }
+
+
+
+
+        }
+     });
+        
+        //시간표 불러오기
+        load.addActionListener(new ActionListener() {
+        
+        @Override
+        public void actionPerformed(ActionEvent arg0) {
+           /*
+           FileInputStream fis = null;
+           try {
+              fis = new FileInputStream("yoyo.xlsx");
+           } catch (FileNotFoundException e) {
+              // TODO Auto-generated catch block
+              e.printStackTrace();
+           }
+           XSSFWorkbook workbook = null;
+           try {
+              workbook = new XSSFWorkbook(fis);
+           } catch (IOException e) {
+              // TODO Auto-generated catch block
+              e.printStackTrace();
+           }
+           int rowindex=0;
+           int columnindex=0;
+           //시트 수 (첫번째에만 존재하므로 0을 준다)
+           //만약 각 시트를 읽기위해서는 FOR문을 한번더 돌려준다
+           XSSFSheet sheet=workbook.getSheetAt(0);
+           //행의 수
+           int rows=sheet.getPhysicalNumberOfRows();
+           for(rowindex=1;rowindex<rows;rowindex++){
+               //행을읽는다
+               XSSFRow row=sheet.getRow(rowindex);
+               if(row !=null){
+                   //셀의 수
+                   int cells=row.getPhysicalNumberOfCells();
+                   for(columnindex=0;columnindex<=cells;columnindex++){
+                       //셀값을 읽는다
+                       XSSFCell cell=row.getCell(columnindex);
+                       String value="";
+                       //셀이 빈값일경우를 위한 널체크
+                       if(cell==null){
+                           continue;
+                       }else{
+                           //타입별로 내용 읽기
+                           switch (cell.getCellType()){
+                           case XSSFCell.CELL_TYPE_FORMULA:
+                               value=cell.getCellFormula();
+                               break;
+                           case XSSFCell.CELL_TYPE_NUMERIC:
+                               value=cell.getNumericCellValue()+"";
+                               break;
+                           case XSSFCell.CELL_TYPE_STRING:
+                               value=cell.getStringCellValue()+"";
+                               break;
+                           case XSSFCell.CELL_TYPE_BLANK:
+                               value=cell.getBooleanCellValue()+"";
+                               break;
+                           case XSSFCell.CELL_TYPE_ERROR:
+                               value=cell.getErrorCellValue()+"";
+                               break;
+                           }
+                       }
+                       String data2[][] = new String[rowindex][columnindex];
+                       
+                       for(int i = 0; i < rowindex1 ; i++)
+                       {
+                          for (int j = 0 ; j < columnindex ; j++)
+                          {
+
+                                String value = new String();
+                                value = data[i][j];
+                                data2[i][j] = value;
+                          }
+                          
+                       }
+                   }
+               }
+           }*/
+        }
+     });
 	    load_lecture.addActionListener(new ActionListener() {
 		        
 	    public void actionPerformed(ActionEvent arg0) {
@@ -183,7 +319,8 @@ public class DeuTimeTable extends JFrame implements ActionListener {
 
 				
 			}
-		});
+		});      
+
 	     
 	      eval.addActionListener(new ActionListener() {
 			
@@ -192,6 +329,9 @@ public class DeuTimeTable extends JFrame implements ActionListener {
 				gui.main.Eval.main();
 			}
 		});
+	      
+	      
+	      
 		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -544,7 +684,11 @@ public class DeuTimeTable extends JFrame implements ActionListener {
 		timetable.getTableHeader().setForeground(Color.white); // 글자색
 	    
 		table.getTableHeader().setReorderingAllowed(false); // 셀 고정
+		table_add.getTableHeader().setReorderingAllowed(false); // 셀 고정
+		timetable.getTableHeader().setReorderingAllowed(false); // 셀 고정
 		
+		
+		// 정보 출력 이벤트
 		table.addMouseListener(new MouseAdapter() {
 			
 			public void mouseClicked(MouseEvent e) {
@@ -575,8 +719,40 @@ public class DeuTimeTable extends JFrame implements ActionListener {
 		
 		});
 		
-	    
+		// 이미지 저장
+	      save_img.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				saveToImage(timetable, timetable.getTableHeader());
+			}
+	    	  
+	      });
 	}
+	
+	// 이미지 저장 함수
+	 private static void saveToImage(JTable table, JTableHeader header)
+	    {
+	        int w = Math.max(table.getWidth(), header.getWidth());
+	        int h = table.getHeight() + header.getHeight();
+	        BufferedImage bi = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+	        Graphics2D g2 = bi.createGraphics();
+	        header.paint(g2);
+	        g2.translate(0, header.getHeight());
+	        table.paint(g2);
+	        g2.dispose();
+	        try
+	        {
+	            ImageIO.write(bi, "png", new File("tableImage.png"));
+	        }
+	        catch(IOException ioe)
+	        {
+	            System.out.println("write: " + ioe.getMessage());
+	        }
+	    }
+	 
+	 
 	
 	
 	
