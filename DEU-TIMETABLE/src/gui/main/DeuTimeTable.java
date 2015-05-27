@@ -12,6 +12,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.JComponent;
@@ -28,6 +29,7 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics2D;
@@ -61,6 +63,8 @@ import data.DefineString;
 
 public class DeuTimeTable extends JFrame implements ActionListener {
 	int rowindex1=0;
+	int color,equal;
+	static int overlap=0;
 	private JPanel contentPane;
 	private JTable table, table_add, timetable;
 	private String data[][];
@@ -624,9 +628,30 @@ public class DeuTimeTable extends JFrame implements ActionListener {
 		        } else {
 		            return true;
 		        }
+		        
 		    }
+			public Component prepareRenderer(TableCellRenderer tcr, int row, int column) {
+		        Component c = super.prepareRenderer(tcr, row, column);
+		        
+
+		        if(color ==1)
+		        {
+		        	if(row == equal)
+		        		c.setBackground(Color.red);
+		        	
+		        	else
+		        		c.setBackground(Color.white);
+		        }
+		        
+		        
+		        
+		        return c;
+		      }
+			
 			
 		};
+		
+		color = 0;
 		scrollPane_1.setViewportView(table_add);
 		
 		table_add.getTableHeader().setBackground(blue); // 배경색
@@ -772,11 +797,12 @@ public class DeuTimeTable extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		String button = e.toString();
 		row = table.getSelectedRow();
-		col = table.getSelectedColumn();
-		
-		
+		int row2 = table_add.getSelectedRow();
+		int num = 0 ;
+
 		if (button.contains(DefineString.ADD))
 		{
+			
 			
 			
 			for (int i = 0 ; i < table_add.getColumnCount() ; i++)
@@ -788,29 +814,61 @@ public class DeuTimeTable extends JFrame implements ActionListener {
 				bottomData[bottomRow][i] = (String) object;
 				
 			}
-			dtm.addRow(bottomData[bottomRow]);
-			bottomRow++;
-			Schedule();
-
-			// JTable생성자를 이용하여 테
+			
+			for(int j = 0 ; j <bottomRow ; j ++)
+			{
+				if(bottomData[j][1] == data2[row][1])
+				{
+					num=1;
+					equal = j;
+				}
+				
+			}
+			
+			if(num == 1)
+			{
+				color = 1;
+				JOptionPane.showMessageDialog(null, "이미 추가하셨습니다.");
+			}
+			
+			else
+			{
+				
+				Schedule();
+				if(overlap!=1)
+				{
+					dtm.addRow(bottomData[bottomRow]); // table_add 데이터 추가 
+					bottomRow++;
+				}
+				
+				else
+				{
+					scheObject = "";
+					JOptionPane.showMessageDialog(null, "시간표가 중복됩니다");
+				}
+					
+				
+			}
+			
+			
 		}
 		
 
-		else
+		else//제거버튼
 		{
 
 			try {
-		            dtm.removeRow(table_add.getSelectedRow());
-
 		            	for (int i = 1 ; i < timetable.getRowCount() ; i++)
 		            	{
 		            		for(int j = 1 ; j < timetable.getColumnCount(); j++)
 		            		{
-		            			if(time[i][j] == table.getValueAt(row, 2))
+		            			
+		            			if(time[i][j] == table_add.getValueAt(row2, 2))
 			            			time[i][j] = "";
 		            		}
 
 		            	}
+		            	 dtm.removeRow(table_add.getSelectedRow());
 		        }
 		            
 		    catch (Exception e2) {
@@ -820,13 +878,14 @@ public class DeuTimeTable extends JFrame implements ActionListener {
 			bottomRow--;
 			
 		}
-
-		
+		overlap=0;
 		table_add.updateUI();
 		timetable.updateUI();
 		
+		
 	}
 	
+
 	private void Schedule()
 	{
         object = table.getValueAt(row, 7);
@@ -837,6 +896,7 @@ public class DeuTimeTable extends JFrame implements ActionListener {
         String retrans = trans1.toString();
         String print = "";
         String backprint = "";
+        int k=0;
         int i1 = trans.indexOf('[');
         int i2 = trans.indexOf(']');
         int j1 = retrans.indexOf(']');
@@ -845,14 +905,14 @@ public class DeuTimeTable extends JFrame implements ActionListener {
         backprint = retrans.substring(j1, j2+1);
         StringBuffer trans2 = new StringBuffer(backprint);
         trans2.reverse();
-        String retrans2 = trans2.toString();
-				
-		int day1[] = {1,2,3,4,5,6,7,8,9,10,11};
-				
-				
+        String retrans2 = trans2.toString();	
+		int day1[] = {1,2,3,4,5,6,7,8,9,10,11};				
+		
 		//월요일
 	    if(trans.contains(DefineString.Week.MON))
 	    {
+	    	int ifi = 0;
+	    	
 	    	for(int i=0; i<11 ; i++)
 	        {
 	            if(i == 0 || i ==1)
@@ -860,16 +920,35 @@ public class DeuTimeTable extends JFrame implements ActionListener {
 	               if (trans.contains("10") || trans.contains("11"))
 	                    continue;
 	             }
+	            
 	            String number = Integer.toString(day1[i]);
+	            
 	              if(print.contains(number))
-	                  time[i][1] = (String) scheObject;
+	            	  if(time[i][1] == "" && time[i][1] != scheObject)
+	            	  {
+	            		  time[i][1] = (String) scheObject;
+	            		  ifi = 1;
+	            	  }
+	            		  
+	            	  else
+	            	  {
+	            		  overlap =1;
+	            		  if(ifi == 1)
+	            		  {
+	            			  time[i-1][1]= "";
+	            		  }
+	            	  }
+	            		 
 	               }
+	    	
 	            }
 	            
-	            
+	    
 	            //화요일
 	            else if(trans.contains(DefineString.Week.TUE))
 	            {
+	            	int ifi = 0;
+	            	
 	               for(int i=0; i<11 ; i++)
 	               {
 	                  if(i == 0 || i ==1)
@@ -879,13 +958,26 @@ public class DeuTimeTable extends JFrame implements ActionListener {
 	                  }
 	                  String number = Integer.toString(day1[i]);      
 	                  if(print.contains(number) )
-	                     time[i][2] = (String) scheObject;
+	                	  if(time[i][2] == "" && time[i][2] != scheObject)
+	                		  time[i][2] = (String) scheObject;
+	                	  else
+	                	  {
+	                		  overlap =1;
+		            		  if(ifi == 1)
+		            		  {
+		            			  time[i-1][2]= "";
+		            		  }
+	                		  
+	                	  }
+
 	               }
 	            }
 	            
 	            //수요일
 	            else if(trans.contains(DefineString.Week.WEN))
 	            {
+	            	int ifi=0;
+	            	
 	               for(int i=0; i<11 ; i++)
 	               {
 	                  if(i == 0 || i ==1)
@@ -895,13 +987,31 @@ public class DeuTimeTable extends JFrame implements ActionListener {
 	                  }
 	                  String number = Integer.toString(day1[i]);
 	                  if(print.contains(number) )
-	                     time[i][3] = (String) scheObject;
+	                	  if(time[i][3] == "" && time[i][3] != scheObject)
+	                	  {
+	                		  time[i][3] = (String) scheObject;
+	                		  ifi =1;
+	                		  
+	                	  }
+	                		  
+		            	  else
+		            	  {
+		            		  overlap =1;
+		            		  if(ifi == 1)
+		            		  {
+		            			  time[i-1][3]= "";
+		            		  }
+		            			  
+		            		  
+		            	  }
 	               }
 	            }
 	            
+	    
 	            //목요일
 	            else if(trans.contains(DefineString.Week.THU))
 	            {
+	            	int ifi = 0;
 	               for(int i=0; i<11 ; i++)
 	               {
 	                  if(i == 0 || i ==1)
@@ -911,13 +1021,25 @@ public class DeuTimeTable extends JFrame implements ActionListener {
 	                  }
 	                  String number = Integer.toString(day1[i]);
 	                  if(print.contains(number))
-	                     time[i][4] = (String) scheObject;
+	                	  if(time[i][4] == "" && time[i][4] != scheObject)
+	                		  time[i][4] = (String) scheObject;
+	                	  else
+		            	  {
+		            		  overlap =1;
+		            		  if(ifi == 1)
+		            		  {
+		            			  time[i-1][4]= "";
+		            		  }
+		            			  
+		            		  
+		            	  }
 	               }
 	            }
 	      
 	            //금요일
 	            else
 	            {
+	            	int ifi = 0;
 	               for(int i=0; i<11 ; i++)
 	               {
 	                  if(i == 0 || i ==1)
@@ -927,93 +1049,169 @@ public class DeuTimeTable extends JFrame implements ActionListener {
 	                  }
 	                  String number = Integer.toString(day1[i]);
 	                  if(print.contains(number) )
-	                     time[i][5] = (String) scheObject;
+	                	  if(time[i][5] == "" && time[i][5] != scheObject)
+	                		  time[i][5] = (String) scheObject;
+	                	  else
+		            	  {
+		            		  overlap =1;
+		            		  if(ifi == 1)
+		            		  {
+		            			  time[i-1][5]= "";
+		            		  }
+		            			  
+		            		  
+		            	  }
 	               }
 	            }
-	            
-	            
+
+
+        if(trans.length() <=18)
+        	retrans2="";
 	            
 	            
 	            //월요일
 	            if(retrans2.contains(DefineString.Week.MON))
 	            {
+	            	int ifi =0;
 	               for(int i=0; i<11 ; i++)
 	               {
 	                  if(i == 0 || i ==1)
 	                  {
-	                     if (trans.contains("10") || trans.contains("11"))
+	                     if (retrans2.contains("10") || retrans2.contains("11"))
 	                           continue;
 	                  }
 	                  String number = Integer.toString(day1[i]);
 	                  if(retrans2.contains(number))
-	                     time[i][1] = (String) scheObject;
+	                	  if(time[i][1] == "" && time[i][1] != scheObject)
+	                		  time[i][1] = (String) scheObject;
+	                	  else
+		            	  {
+		            		  overlap =1;
+		            		  if(ifi == 1)
+		            		  {
+		            			  time[i-1][1]= "";
+		            		  }
+		            			  
+		            		  
+		            	  }
 	               }
 	            }
 
 	            //화요일
 	            else if(retrans2.contains(DefineString.Week.TUE))
 	            {
+	            	int ifi= 0;
 	               for(int i=0; i<11 ; i++)
 	               {
 	                  if(i == 0 || i ==1)
 	                  {
-	                     if (trans.contains("10") || trans.contains("11"))
+	                     if (retrans2.contains("10") || retrans2.contains("11"))
 	                           continue;
 	                  }
 	                  String number = Integer.toString(day1[i]);      
-	                  if(retrans2.contains(number) )
-	                     time[i][2] = (String) scheObject;
+	                  if(retrans2.contains(number))
+	                	  if(time[i][2] == "" && time[i][2] != scheObject)
+	                		  time[i][2] = (String) scheObject;
+	                	  else
+		            	  {
+		            		  overlap =1;
+		            		  if(ifi == 1)
+		            		  {
+		            			  time[i-1][2]= "";
+		            		  }
+		            			  
+		            		  
+		            	  }
 	               }
 	            }
 	            
 	            //수요일
 	            else if(retrans2.contains(DefineString.Week.WEN))
 	            {
+	            	int ifi=0;
 	               for(int i=0; i<11 ; i++)
 	               {
 	                  if(i == 0 || i ==1)
 	                  {
-	                     if (trans.contains("10") || trans.contains("11"))
+	                     if (retrans2.contains("10") || retrans2.contains("11"))
 	                           continue;
 	                  }
 	                  String number = Integer.toString(day1[i]);
-	                  if(retrans2.contains(number) )
-	                     time[i][3] = (String) scheObject;
+	                  if(retrans2.contains(number))
+	                	  if(time[i][3] == "" && time[i][3] != scheObject)
+	                		  time[i][3] = (String) scheObject;
+	                	  else
+		            	  {
+		            		  overlap =1;
+		            		  if(ifi == 1)
+		            		  {
+		            			  time[i-1][3]= "";
+		            		  }
+		            			  
+		            		  
+		            	  }
 	               }
 	            }
 	            
 	            //목요일
 	            else if(retrans2.contains(DefineString.Week.THU))
 	            {
+	            	int ifi = 0;
 	               for(int i=0; i<11 ; i++)
 	               {
 	                  if(i == 0 || i ==1)
 	                  {
-	                     if (trans.contains("10") || trans.contains("11"))
+	                     if (retrans2.contains("10") || retrans2.contains("11"))
 	                           continue;
 	                  }
 	                  String number = Integer.toString(day1[i]);
 	                  if(retrans2.contains(number))
-	                     time[i][4] = (String) scheObject;
+	                	  if(time[i][4] == "" && time[i][4] != scheObject)
+	                		  time[i][4] = (String) scheObject;
+	                	  else
+		            	  {
+		            		  overlap =1;
+		            		  if(ifi == 1)
+		            		  {
+		            			  time[i-1][4]= "";
+		            		  }
+		            			  
+		            		  
+		            	  }
 	               }
 	            }
 	            
 	            //금요일
 	            else
 	            {
+	            	int ifi = 0;
 	               for(int i=0; i<11 ; i++)
 	               {
+	            	   
 	                  if(i == 0 || i ==1)
 	                  {
-	                     if (trans.contains("10") || trans.contains("11"))
+	                     if (retrans2.contains("10") || retrans2.contains("11"))
 	                           continue;
 	                  }
+
 	                  String number = Integer.toString(day1[i]);
-	                  if(retrans2.contains(number) )
-	                     time[i][5] = (String) scheObject;
+	                  if(retrans2.contains(number))
+	                	  if(time[i][5] == "" && time[i][5] != scheObject)
+	                		  time[i][5] = (String) scheObject;
+	                	  else
+		            	  {
+		            		  overlap =1;
+		            		  if(ifi == 1)
+		            		  {
+		            			  time[i-1][5]= "";
+		            		  }
+		            			  
+		            		  
+		            	  }
 	               }
 	            }
-	            
+
+
 	            //중앙정렬
 	            DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer();
 				dtcr.setHorizontalAlignment(SwingConstants.CENTER);
@@ -1021,7 +1219,7 @@ public class DeuTimeTable extends JFrame implements ActionListener {
 				for(int i = 0 ; i< tcm.getColumnCount() ; i++)
 				{
 				 tcm.getColumn(i).setCellRenderer(dtcr);
-				}
+				}	
 	            
 	            
 
@@ -1151,6 +1349,7 @@ public class DeuTimeTable extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					
 					DeuTimeTable frame = new DeuTimeTable();
 					frame.setVisible(true);
 			        
@@ -1159,6 +1358,7 @@ public class DeuTimeTable extends JFrame implements ActionListener {
 				}
 			}
 		});
+		
 	}
 
 
