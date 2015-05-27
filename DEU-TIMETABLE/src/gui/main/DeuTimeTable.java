@@ -60,13 +60,15 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import data.DefineString;
 
 public class DeuTimeTable extends JFrame implements ActionListener {
-
+	int rowindex1=0;
 	private JPanel contentPane;
 	private JTable table, table_add, timetable;
-
+	private String data[][];
+	private String data2[][];
+	private DefaultTableModel model;
 	private JComboBox comboBox;
 	private JTextField searchField;
-	
+	JTextField title_tf, num_tf, sort_tf, credit_tf, pro_tf, time_tf,  grade_tf, room_tf;
 	private static final long serialVersionUID = 1L;
 	Label lbl1, lbl2, lbl3;
 	static int row,col=0;
@@ -76,7 +78,8 @@ public class DeuTimeTable extends JFrame implements ActionListener {
 	private String[] colName = {DefineString.Parser.SORT, DefineString.Parser.LECTURE_NUM, DefineString.Parser.LECTURE_NAME, DefineString.Parser.CREDIT, 
 			DefineString.Parser.TIME, DefineString.Parser.GRADE, DefineString.Parser.PROFESSOR, DefineString.Parser.LECTURE_ROOM};
 	DefaultTableModel dtm = new DefaultTableModel(colName, bottomRow);
-	private String data[][];
+	
+	private String search_data[][];
 	   static Object [][]time = {
            {"09:00 ~ 09:50", "", "", "", "", "", "", ""},
            {"10:00 ~ 10:50", "", "", "", "", "", "", ""},
@@ -153,7 +156,6 @@ public class DeuTimeTable extends JFrame implements ActionListener {
         public void actionPerformed(ActionEvent arg0) {
            // TODO Auto-generated method stub
            
-        
            XSSFWorkbook wb = new XSSFWorkbook(); // Excel 2007 이상, 대용량 Excel 처리에 적합하며 '쓰기전용'임
            
             /* (2) 새로운 Sheet 생성 */
@@ -303,23 +305,6 @@ public class DeuTimeTable extends JFrame implements ActionListener {
 		            } 
 		   });
 		      
-	    
-	    save.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-
-			}
-		});
-	      
-	      load.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-
-				
-			}
-		});      
 
 	     
 	      eval.addActionListener(new ActionListener() {
@@ -357,7 +342,7 @@ public class DeuTimeTable extends JFrame implements ActionListener {
 		searchField.setColumns(20);
 		
 		// 검색 버튼 추가
-		JButton button = new JButton("검색");
+		final JButton button = new JButton("검색");
 		top.add(button);
 		
 		// middle 패널
@@ -375,10 +360,22 @@ public class DeuTimeTable extends JFrame implements ActionListener {
 		panel_7.setLayout(new BoxLayout(panel_7, BoxLayout.X_AXIS));
 		
 		
+		//검색버튼 
+		button.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				search();
+			}
+			
+			
+		});
+		
+		
 		FileInputStream fis = null;
 		int rowindex=0;
 		int columnindex=0;
-		int rowindex1=0;
+		
 		 data = new String[100][100];
 		 JFileChooser jfc = new JFileChooser();
 		 jfc.setMultiSelectionEnabled(true);
@@ -447,7 +444,7 @@ public class DeuTimeTable extends JFrame implements ActionListener {
 	                data[rowindex1][columnindex] = value;
 	             }
 	          }
-
+	          
 	          String kkk = jfc.getSelectedFiles()[i].toString();
 	          if(kkk.contains(DefineString.Parser.LEARNING_BASE)== true)
 	          {
@@ -462,7 +459,7 @@ public class DeuTimeTable extends JFrame implements ActionListener {
 	     
 		// 테이블의 열 이름이 들어갈 내용을 일차원 배열에 넣는다.
 		
-		String data2[][] = new String[rowindex1][columnindex];
+		data2 = new String[rowindex1][columnindex];
 		
 		for(int i = 0; i < rowindex1 ; i++)
 		{
@@ -479,7 +476,7 @@ public class DeuTimeTable extends JFrame implements ActionListener {
 		//table = new JTable(data2, colName);	
         
 		
-	    DefaultTableModel model = new DefaultTableModel(data2, colName);
+		model = new DefaultTableModel(data2, colName);
 	    table = new JTable(model){
 			public boolean isCellEditable(int row, int column) {
 		        if (column >= 0) {
@@ -541,7 +538,7 @@ public class DeuTimeTable extends JFrame implements ActionListener {
 	    panel_4.setLayout(new GridLayout(8,2,20,10));
 	    
 	    // 과목 정보
-	    JTextField title_tf, num_tf, sort_tf, credit_tf, pro_tf, time_tf,  grade_tf, room_tf;
+	    
 	    JPanel empno_p, name_p, pos_p, dept_p, pro_p, time_p, grade_p, room_p;
         empno_p = new JPanel(new FlowLayout(FlowLayout.LEFT));
         name_p = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -1028,6 +1025,125 @@ public class DeuTimeTable extends JFrame implements ActionListener {
 	            
 	            
 
+	}
+	private void search()
+	{
+		String value = new String();
+		String content = searchField.getText();
+		int content_length = content.length();
+		
+		if(content_length == 0)
+		{
+			model.setRowCount(0);
+			for(int i=0 ; i<rowindex1; i++)
+			{
+					model.addRow(data[i]);
+			}
+
+		}
+
+		
+		//System.out.println(searchField.getText());
+		else if(comboBox.getSelectedItem() == DefineString.Parser.SORT )//구분
+		{
+			model.setRowCount(0);
+			for(int i=0 ; i<rowindex1; i++)
+			{
+					
+				if(data[i][0].contains(content))
+				{
+					model.addRow(data[i]);
+				}
+				
+			}
+			
+		}
+		
+		else if(comboBox.getSelectedItem() == DefineString.Parser.LECTURE_NAME )//교과목명
+		{
+			model.setRowCount(0);
+			for(int i=0 ; i<rowindex1; i++)
+			{
+					
+				if(data[i][2].contains(content))
+				{
+					model.addRow(data[i]);
+				}
+				
+			}
+		}
+		
+		else if(comboBox.getSelectedItem() == DefineString.Parser.CREDIT)//학점
+		{
+			model.setRowCount(0);
+			for(int i=0 ; i<rowindex1; i++)
+			{
+					
+				if(data[i][3].contains(content))
+				{
+					model.addRow(data[i]);
+				}
+				
+			}
+		}
+		
+		else if(comboBox.getSelectedItem() == DefineString.Parser.GRADE)//학년
+		{
+			model.setRowCount(0);
+			for(int i=0 ; i<rowindex1; i++)
+			{
+					
+				if(data[i][4].contains(content))
+				{
+					model.addRow(data[i]);
+				}
+				
+			}
+		}
+		
+		else if(comboBox.getSelectedItem() == DefineString.Parser.TIME)//시간
+		{
+			model.setRowCount(0);
+			for(int i=0 ; i<rowindex1; i++)
+			{
+					
+				if(data[i][5].contains(content))
+				{
+					model.addRow(data[i]);
+				}
+				
+			}
+		}
+		
+		else if(comboBox.getSelectedItem() == DefineString.Parser.PROFESSOR)//담당교수
+		{
+			model.setRowCount(0);
+			for(int i=0 ; i<rowindex1; i++)
+			{
+					
+				if(data[i][6].contains(content))
+				{
+					model.addRow(data[i]);
+				}
+				
+			}
+		}
+		
+		else//강의실 및 강의 시간
+		{
+			model.setRowCount(0);
+			for(int i=0 ; i<rowindex1; i++)
+			{
+					
+				if(data[i][7].contains(content))
+				{
+					model.addRow(data[i]);
+				}
+				
+			}
+		}
+		
+		
 	}
 	
 	
